@@ -18,7 +18,6 @@ export class LoginComponent {
     tutor: { usuario: 'tutor@uptc.edu.co', password: 'tutor123' },
     estudiante: { usuario: 'estudiante@uptc.edu.co', password: 'estudiante123' }
   };
-
   constructor(private router: Router) {}
 
   login(): void {
@@ -29,7 +28,7 @@ export class LoginComponent {
     } else if (usuario === this.testCredentials.estudiante.usuario && password === this.testCredentials.estudiante.password) {
       this.router.navigate(['/student']);
     } else {
-      alert('Credenciales incorrectas. Usa tutor@uptc.edu.co / tutor123 para probar.');
+      alert('Credenciales incorrectas.');
     }
   }
 }
