@@ -2,50 +2,34 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from './../../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  template: `
-    <div class="login-container">
-      <h2>Iniciar sesión</h2>
-      <input [(ngModel)]="username" placeholder="Usuario" />
-      <input [(ngModel)]="password" type="password" placeholder="Contraseña" />
-      <button (click)="login()">Ingresar</button>
-    </div>
-  `
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  username = '';
+  usuario = '';
   password = '';
 
-  constructor(private auth: AuthService, private router: Router) {}
+  private testCredentials = {
+    tutor: { usuario: 'tutor@uptc.edu.co', password: 'tutor123' },
+    estudiante: { usuario: 'estudiante@uptc.edu.co', password: 'estudiante123' }
+  };
 
-  login() {
-  const success = this.auth.login(this.username, this.password);
-  if (success) {
-    const user = this.auth.getUser();
-    if (user) {
-      switch (user.role) {
-        case 'admin':
-          this.router.navigate(['/dashboard/admin']);
-          break;
-        case 'tutor':
-          this.router.navigate(['/dashboard/docente']);
-          break;
-        case 'student':
-          this.router.navigate(['/dashboard/estudiante']);
-          break;
-        default:
-          alert('Rol desconocido');
-      }
+  constructor(private router: Router) {}
+
+  login(): void {
+    const { usuario, password } = this;
+
+    if (usuario === this.testCredentials.tutor.usuario && password === this.testCredentials.tutor.password) {
+      this.router.navigate(['/teacher']);
+    } else if (usuario === this.testCredentials.estudiante.usuario && password === this.testCredentials.estudiante.password) {
+      this.router.navigate(['/student']);
     } else {
-      alert('No se pudo obtener el usuario');
+      alert('Credenciales incorrectas. Usa tutor@uptc.edu.co / tutor123 para probar.');
     }
-  } else {
-    alert('Credenciales incorrectas');
   }
-}
 }
