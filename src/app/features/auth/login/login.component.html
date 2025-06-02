@@ -1,4 +1,10 @@
 <div class="container">
+  <app-custom-alert
+    [message]="alertMessage"
+    [show]="alertVisible"
+    (closed)="alertVisible = false">
+  </app-custom-alert>
+  
   <div class="left-panel">
     <div class="logo">
       <img src="assets/icons/logoUPTC.svg" alt="UPTC Logo" class="logo-image" />
