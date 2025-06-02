@@ -1,21 +1,24 @@
-<div class="app-container">
-  <nav class="navbar">
-    <div class="navbar-left">
-      <img src="assets/icons/logoUPTC.svg" alt="UPTC Logo" class="logo-image" />
+<div class="app-container" id="app-container">
+
+  <nav class="navbar" id="navbar">
+    <div class="navbar-left" id="navbar-left">
+      <img id="navbar-logo" src="assets/icons/logoUPTC.svg" alt="UPTC Logo" class="logo-image" />
     </div>
-    <div class="navbar-right">
+    <div class="navbar-right" id="navbar-right">
     </div>
   </nav>
 
-  <div class="main-container">
-    <div class="sidebar" [ngClass]="{ collapsed: isSidebarCollapsed }">
-      <div class="sidebar-header">
-        <div class="logo-container">
-          <h2 *ngIf="!isSidebarCollapsed" class="sidebar-title">
+  <div class="main-container" id="main-container">
+    
+    <div class="sidebar" id="sidebar" [ngClass]="{ collapsed: isSidebarCollapsed }">
+      <div class="sidebar-header" id="sidebar-header">
+        <div class="logo-container" id="sidebar-logo-container">
+          <h2 *ngIf="!isSidebarCollapsed" id="sidebar-title" class="sidebar-title">
             Gestión de Tutorías
           </h2>
         </div>
         <button
+          id="sidebar-toggle-btn"
           class="collapse-btn"
           (click)="toggleSidebar()"
           [attr.aria-label]="
@@ -23,6 +26,7 @@
           "
         >
           <i
+            id="sidebar-toggle-icon"
             class="fas"
             [ngClass]="
               isSidebarCollapsed ? 'fa-chevron-right' : 'fa-chevron-left'
@@ -31,19 +35,18 @@
         </button>
       </div>
 
-      <nav class="menu" role="navigation">
+      <nav class="menu" id="sidebar-menu" role="navigation">
       </nav>
     </div>
 
-    <div class="content">
-
-
-      <div class="logs-container" *ngIf="logs?.length">
-        <h4>Logs:</h4>
-        <div class="logs-scroll">
-          <p *ngFor="let log of logs">{{ log }}</p>
+    <div class="content" id="main-content">
+      <div class="logs-container" id="logs-container" *ngIf="logs?.length">
+        <h4 id="logs-title">Logs:</h4>
+        <div class="logs-scroll" id="logs-scroll">
+          <p *ngFor="let log of logs" class="log-item">{{ log }}</p>
         </div>
       </div>
     </div>
+
   </div>
 </div>

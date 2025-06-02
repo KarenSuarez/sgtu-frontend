@@ -1,20 +1,21 @@
-<div class="app-container">
-  <nav class="navbar">
-    <div class="navbar-left">
-      <img src="assets/icons/logoUPTC.svg" alt="UPTC Logo" class="logo-image" />
+<div class="app-container" id="app-container">
+  <nav class="navbar" id="navbar">
+    <div class="navbar-left" id="navbar-left">
+      <img src="assets/icons/logoUPTC.svg" alt="UPTC Logo" class="logo-image" id="logo-image" />
     </div>
-    <div class="navbar-right">
-      <div class="user-menu">
-        <div class="user-info" (click)="toggleUserMenu()">
+    <div class="navbar-right" id="navbar-right">
+      <div class="user-menu" id="user-menu">
+        <div class="user-info" (click)="toggleUserMenu()" id="user-info">
           <img
             src="assets/images/usuario.png"
             alt="User Icon"
             class="user-icon"
+            id="user-icon"
           />
-          <span> {{ userName.split(" ")[0] }}</span>
+          <span id="user-name">{{ userName.split(" ")[0] }}</span>
         </div>
-        <div *ngIf="isUserMenuOpen" class="dropdown-menu">
-          <button class="btn-secondary" (click)="logout()">
+        <div *ngIf="isUserMenuOpen" class="dropdown-menu" id="dropdown-menu">
+          <button class="btn-secondary" (click)="logout()" id="logout-button">
             <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
           </button>
         </div>
@@ -22,11 +23,11 @@
     </div>
   </nav>
 
-  <div class="main-container">
-    <div class="sidebar" [ngClass]="{ collapsed: isSidebarCollapsed }">
-      <div class="sidebar-header">
-        <div class="logo-container">
-          <h2 *ngIf="!isSidebarCollapsed" class="sidebar-title">
+  <div class="main-container" id="main-container">
+    <div class="sidebar" [ngClass]="{ collapsed: isSidebarCollapsed }" id="sidebar">
+      <div class="sidebar-header" id="sidebar-header">
+        <div class="logo-container" id="logo-container">
+          <h2 *ngIf="!isSidebarCollapsed" class="sidebar-title" id="sidebar-title">
             Gestión de Tutorías
           </h2>
         </div>
@@ -36,27 +37,30 @@
           [attr.aria-label]="
             isSidebarCollapsed ? 'Expandir sidebar' : 'Colapsar sidebar'
           "
+          id="collapse-sidebar-btn"
         >
           <i
             class="fas"
             [ngClass]="
               isSidebarCollapsed ? 'fa-chevron-right' : 'fa-chevron-left'
             "
+            id="collapse-icon"
           ></i>
         </button>
       </div>
 
-      <nav class="menu" role="navigation">
+      <nav class="menu" role="navigation" id="menu-nav">
         <button
           (click)="navigateTo('inicio')"
           [ngClass]="{ active: currentView === 'inicio' }"
           class="menu-item"
           [attr.aria-label]="'Ir a Inicio'"
           [title]="isSidebarCollapsed ? 'Inicio' : ''"
+          id="menu-inicio-btn"
         >
-          <i class="fas fa-home menu-icon"></i>
-          <span class="menu-text" *ngIf="!isSidebarCollapsed">Inicio</span>
-          <div class="active-indicator" *ngIf="currentView === 'inicio'"></div>
+          <i class="fas fa-home menu-icon" id="icon-inicio"></i>
+          <span class="menu-text" *ngIf="!isSidebarCollapsed" id="text-inicio">Inicio</span>
+          <div class="active-indicator" *ngIf="currentView === 'inicio'" id="active-indicator-inicio"></div>
         </button>
 
         <button
@@ -65,12 +69,14 @@
           class="menu-item"
           [attr.aria-label]="'Ir a Asignaturas'"
           [title]="isSidebarCollapsed ? 'Asignaturas' : ''"
+          id="menu-asignaturas-btn"
         >
-          <i class="fas fa-book menu-icon"></i>
-          <span class="menu-text" *ngIf="!isSidebarCollapsed">Asignaturas</span>
+          <i class="fas fa-book menu-icon" id="icon-asignaturas"></i>
+          <span class="menu-text" *ngIf="!isSidebarCollapsed" id="text-asignaturas">Asignaturas</span>
           <div
             class="active-indicator"
             *ngIf="currentView === 'asignaturas'"
+            id="active-indicator-asignaturas"
           ></div>
         </button>
 
@@ -80,11 +86,13 @@
           class="menu-item"
           [attr.aria-label]="'Ir a Horario'"
           [title]="isSidebarCollapsed ? 'Horario' : ''"
+          id="menu-horario-btn"
         >
-          <i class="fas fa-calendar-alt menu-icon"></i>
-          <span class="menu-text" *ngIf="!isSidebarCollapsed">Horario</span>
+          <i class="fas fa-calendar-alt menu-icon" id="icon-horario"></i>
+          <span class="menu-text" *ngIf="!isSidebarCollapsed" id="text-horario">Horario</span>
           <div class="active-indicator" 
           *ngIf="currentView === 'horario'"
+          id="active-indicator-horario"
           ></div>
         </button>
 
@@ -94,49 +102,51 @@
           class="menu-item"
           [attr.aria-label]="'Ir a Tutorías'"
           [title]="isSidebarCollapsed ? 'Tutorías' : ''"
+          id="menu-tutorias-btn"
         >
-          <i class="fas fa-users menu-icon"></i>
-          <span class="menu-text" *ngIf="!isSidebarCollapsed">Tutorías</span>
+          <i class="fas fa-users menu-icon" id="icon-tutorias"></i>
+          <span class="menu-text" *ngIf="!isSidebarCollapsed" id="text-tutorias">Tutorías</span>
           <div
             class="active-indicator"
             *ngIf="currentView === 'tutorias'"
+            id="active-indicator-tutorias"
           ></div>
         </button>
       </nav>
 
-      <div class="sidebar-footer" *ngIf="!isSidebarCollapsed">
-        <div class="user-info">
-          <i class="fas fa-user-circle"></i>
-          <span>{{ userName }}</span>
+      <div class="sidebar-footer" *ngIf="!isSidebarCollapsed" id="sidebar-footer">
+        <div class="user-info" id="sidebar-user-info">
+          <i class="fas fa-user-circle" id="sidebar-user-icon"></i>
+          <span id="sidebar-user-name">{{ userName }}</span>
         </div>
       </div>
     </div>
 
-    <div class="content">
-      <div *ngIf="currentView === 'inicio'">
-        <h3>Bienvenido, {{ userName }}!</h3>
-        <p>
+    <div class="content" id="content">
+      <div *ngIf="currentView === 'inicio'" id="view-inicio">
+        <h3 id="welcome-message">Bienvenido, {{ userName }}!</h3>
+        <p id="inicio-description">
           Este es el panel de gestión para estudiantes. Utiliza los botones del
           menú para navegar.
         </p>
       </div>
 
-      <div *ngIf="currentView === 'asignaturas'">
-        <h3>Mis Asignaturas</h3>
-        <table class="asignaturas-table">
+      <div *ngIf="currentView === 'asignaturas'" id="view-asignaturas">
+        <h3 id="asignaturas-title">Mis Asignaturas</h3>
+        <table class="asignaturas-table" id="asignaturas-table">
           <thead>
             <tr>
-              <th>Asignatura</th>
-              <th>Profesor</th>
-              <th>Acción</th>
+              <th id="th-asignatura">Asignatura</th>
+              <th id="th-profesor">Profesor</th>
+              <th id="th-accion">Acción</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let subject of subjects">
-              <td>{{ subject.name }}</td>
-              <td>{{ subject.professor }}</td>
+            <tr *ngFor="let subject of subjects" id="asignatura-row-{{subject.name}}">
+              <td id="subject-name-{{subject.name}}">{{ subject.name }}</td>
+              <td id="subject-professor-{{subject.name}}">{{ subject.professor }}</td>
               <td>
-                <button (click)="requestTutoria(subject.name)">
+                <button (click)="requestTutoria(subject.name)" id="request-tutoria-btn-{{subject.name}}">
                   Solicitar Tutoria
                 </button>
               </td>
@@ -145,108 +155,110 @@
         </table>
       </div>
 
-      <div *ngIf="currentView === 'horario'">
-        <h3>Horario de Clases</h3>
-        <div class="schedule-controls">
-          <button class="btn-primary" (click)="downloadSchedule()">
+      <div *ngIf="currentView === 'horario'" id="view-horario">
+        <h3 id="horario-title">Horario de Clases</h3>
+        <div class="schedule-controls" id="schedule-controls">
+          <button class="btn-primary" (click)="downloadSchedule()" id="btn-download-schedule">
             <i class="fas fa-download"></i> Descargar
           </button>
-          <button class="btn-secondary" (click)="saveSchedule()">
+          <button class="btn-secondary" (click)="saveSchedule()" id="btn-save-schedule">
             <i class="fas fa-save"></i> Guardar Horario
           </button>
-          <button class="btn-secondary" (click)="exportSchedule()">
+          <button class="btn-secondary" (click)="exportSchedule()" id="btn-export-schedule">
             <i class="fas fa-file-export"></i> Exportar Horario
           </button>
         </div>
     
-          <table class="schedule-table">
+        <table class="schedule-table" id="schedule-table">
           <thead>
             <tr>
-              <th>Hora</th>
-              <th *ngFor="let day of days">{{ day }}</th>
+              <th id="th-hora">Hora</th>
+              <th *ngFor="let day of days" id="th-day-{{day}}">{{ day }}</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let hour of hours">
-              <td>{{ hour }}</td>
+            <tr *ngFor="let hour of hours" id="schedule-row-{{hour}}">
+              <td id="hour-{{hour}}">{{ hour }}</td>
               <td
                 *ngFor="let day of days"
                 [ngClass]="{ occupied: isOccupied(hour, day) }"
+                id="cell-{{hour}}-{{day}}"
               >
-                <span *ngIf="schedule[hour]?.[day]?.class">{{
+                <span *ngIf="schedule[hour]?.[day]?.class" id="class-{{hour}}-{{day}}">{{
                   schedule[hour][day].class
                 }}</span>
                 <span
                   *ngIf="schedule[hour]?.[day]?.professor"
                   class="professor"
+                  id="professor-{{hour}}-{{day}}"
                   >({{ schedule[hour][day].professor }})</span
                 >
               </td>
             </tr>
           </tbody>
-          </table>
-        
+        </table>
       </div>
 
-      <div *ngIf="currentView === 'tutorias'">
-        <h3>Solicitar Tutoria</h3>
-        <div class="tutoria-form">
-          <select [(ngModel)]="selectedSubject" name="subject">
+      <div *ngIf="currentView === 'tutorias'" id="view-tutorias">
+        <h3 id="tutoria-title">Solicitar Tutoria</h3>
+        <div class="tutoria-form" id="tutoria-form">
+          <select [(ngModel)]="selectedSubject" name="subject" id="select-subject">
             <option value="">Seleccione una asignatura</option>
-            <option *ngFor="let subject of subjects" [value]="subject.name">{{
+            <option *ngFor="let subject of subjects" [value]="subject.name" id="option-subject-{{subject.name}}">{{
               subject.name
             }}</option>
           </select>
-          <select [(ngModel)]="selectedDay" name="day">
+          <select [(ngModel)]="selectedDay" name="day" id="select-day">
             <option value="">Seleccione un día</option>
-            <option *ngFor="let day of days" [value]="day">{{ day }}</option>
+            <option *ngFor="let day of days" [value]="day" id="option-day-{{day}}">{{ day }}</option>
           </select>
-          <select [(ngModel)]="selectedHour" name="hour">
+          <select [(ngModel)]="selectedHour" name="hour" id="select-hour">
             <option value="">Seleccione una hora</option>
-            <option *ngFor="let hour of hours" [value]="hour">{{ hour }}</option>
+            <option *ngFor="let hour of hours" [value]="hour" id="option-hour-{{hour}}">{{ hour }}</option>
           </select>
           <button
             class="btn-primary"
             (click)="addTutoriaRequest()"
             [disabled]="!selectedDay || !selectedHour || !selectedSubject"
+            id="btn-add-tutoria"
           >
             <i class="fas fa-plus"></i> Solicitar
           </button>
         </div>
 
-        <div *ngIf="requestingTutoria" class="edit-form">
-          <h4>Confirmar Solicitud</h4>
-          <p>
+        <div *ngIf="requestingTutoria" class="edit-form" id="confirm-tutoria-form">
+          <h4 id="confirm-tutoria-title">Confirmar Solicitud</h4>
+          <p id="confirm-tutoria-info">
             Solicitando para: {{ requestingTutoria.subject }} en
             {{ requestingTutoria.day }} a las {{ requestingTutoria.hour }}
           </p>
-          <button class="btn-primary" (click)="confirmTutoriaRequest()">
+          <button class="btn-primary" (click)="confirmTutoriaRequest()" id="btn-confirm-tutoria">
             <i class="fas fa-check"></i> Confirmar
           </button>
-          <button class="btn-secondary" (click)="requestingTutoria = null">
+          <button class="btn-secondary" (click)="requestingTutoria = null" id="btn-cancel-tutoria">
             <i class="fas fa-times"></i> Cancelar
           </button>
         </div>
 
-        <h3>Mis Tutorías Solicitadas</h3>
-        <table class="tutorias-table">
+        <h3 id="tutorias-solicitadas-title">Mis Tutorías Solicitadas</h3>
+        <table class="tutorias-table" id="tutorias-table">
           <thead>
             <tr>
-              <th>Hora</th>
-              <th>Día</th>
-              <th>Asignatura</th>
-              <th>Estado</th>
-              <th>Acción</th>
+              <th id="th-tutoria-hora">Hora</th>
+              <th id="th-tutoria-dia">Día</th>
+              <th id="th-tutoria-asignatura">Asignatura</th>
+              <th id="th-tutoria-estado">Estado</th>
+              <th id="th-tutoria-accion">Acción</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let tutoria of tutorias">
-              <td>{{ tutoria.hour }}</td>
-              <td>{{ tutoria.day }}</td>
-              <td>{{ tutoria.subject }}</td>
-              <td>{{ tutoria.status }}</td>
+            <tr *ngFor="let tutoria of tutorias" id="tutoria-row-{{tutoria.subject}}-{{tutoria.day}}-{{tutoria.hour}}">
+              <td id="tutoria-hour-{{tutoria.subject}}-{{tutoria.day}}-{{tutoria.hour}}">{{ tutoria.hour }}</td>
+              <td id="tutoria-day-{{tutoria.subject}}-{{tutoria.day}}-{{tutoria.hour}}">{{ tutoria.day }}</td>
+              <td id="tutoria-subject-{{tutoria.subject}}-{{tutoria.day}}-{{tutoria.hour}}">{{ tutoria.subject }}</td>
+              <td id="tutoria-status-{{tutoria.subject}}-{{tutoria.day}}-{{tutoria.hour}}">{{ tutoria.status }}</td>
               <td>
-                <button class="btn-danger" (click)="cancelTutoria(tutoria)">
+                <button class="btn-danger" (click)="cancelTutoria(tutoria)" id="btn-cancel-tutoria-{{tutoria.subject}}-{{tutoria.day}}-{{tutoria.hour}}">
                   <i class="fas fa-trash-alt"></i> Cancelar Tutoria
                 </button>
               </td>
