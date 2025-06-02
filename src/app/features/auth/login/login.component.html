@@ -1,41 +1,54 @@
-<div class="container">
+<div class="container" id="login-container">
+
   <app-custom-alert
+    id="login-alert"
     [message]="alertMessage"
     [show]="alertVisible"
     (closed)="alertVisible = false">
   </app-custom-alert>
-  
-  <div class="left-panel">
-    <div class="logo">
-      <img src="assets/icons/logoUPTC.svg" alt="UPTC Logo" class="logo-image" />
+
+  <div class="left-panel" id="login-left-panel">
+    <div class="logo" id="logo-container">
+      <img id="uptc-logo" src="assets/icons/logoUPTC.svg" alt="UPTC Logo" class="logo-image" />
     </div>
-    <h1>SGTU</h1>
-    <h1>Sistema de Gestión de Tutorías Universitarias</h1>
+    <h1 id="app-title">SGTU</h1>
+    <h1 id="app-subtitle">Sistema de Gestión de Tutorías Universitarias</h1>
   </div>
 
-  <div class="right-panel">
-    <div class="form-toggle">
-      <h1>Iniciar Sesión</h1>
-      <h2>Ingresa tus credenciales institucionales</h2>
+  <div class="right-panel" id="login-right-panel">
+    <div class="form-toggle" id="form-header">
+      <h1 id="form-title">Iniciar Sesión</h1>
+      <h2 id="form-subtitle">Ingresa tus credenciales institucionales</h2>
     </div>
 
-    <form class="signup-form" (ngSubmit)="login()">
-      <label>Usuario</label>
-      <input type="text" placeholder="@uptc.edu.co" [(ngModel)]="usuario" name="usuario" required />
+    <form id="login-form" class="signup-form" (ngSubmit)="login()">
+      <label for="input-usuario">Usuario</label>
+      <input
+        id="input-usuario"
+        type="text"
+        placeholder="@uptc.edu.co"
+        [(ngModel)]="usuario"
+        name="usuario"
+        required />
 
-      <label>Contraseña</label>
-      <input type="password" [(ngModel)]="password" name="password" required />
+      <label for="input-password">Contraseña</label>
+      <input
+        id="input-password"
+        type="password"
+        [(ngModel)]="password"
+        name="password"
+        required />
 
-      <div class="checkbox">
-        <input type="checkbox" id="terms" />
-        <label for="terms">
-          <a href="#">Remember me</a>
+      <div class="checkbox" id="remember-checkbox-container">
+        <input type="checkbox" id="remember-me" />
+        <label for="remember-me">
+          <a href="#" id="remember-link">Remember me</a>
         </label>
       </div>
 
-      <p class="member-text">¿Olvidaste tu Contraseña?</p>
+      <p class="member-text" id="forgot-password">¿Olvidaste tu Contraseña?</p>
 
-      <button class="signup-btn" type="submit">Iniciar Sesión</button>
+      <button id="btn-login" class="signup-btn" type="submit">Iniciar Sesión</button>
     </form>
   </div>
 </div>

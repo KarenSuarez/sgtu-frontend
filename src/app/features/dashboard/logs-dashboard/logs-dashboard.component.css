@@ -161,17 +161,6 @@
   transform: scale(1.1);
 }
 
-
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: rgba(255, 251, 234, 0.7);
-  font-size: 0.9rem;
-}
-
-
-/* Tooltips para modo colapsado */
 .sidebar.collapsed .menu-item[title]:hover::after {
   content: attr(title);
   position: absolute;
@@ -215,8 +204,8 @@
 }
 
 .logs-scroll {
-  max-height: 530px;      /* Limita la altura del contenedor */
-  overflow-y: auto;       /* Scroll vertical solo si el contenido es mayor */
-  padding-right: 0.5rem;  /* Para evitar choque con la barra */
+  max-height: 530px;      
+  overflow-y: auto;       
+  padding-right: 0.5rem;  
 }
 
