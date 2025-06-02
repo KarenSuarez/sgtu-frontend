@@ -1,0 +1,49 @@
+<div class="app-container">
+  <nav class="navbar">
+    <div class="navbar-left">
+      <img src="assets/icons/logoUPTC.svg" alt="UPTC Logo" class="logo-image" />
+    </div>
+    <div class="navbar-right">
+    </div>
+  </nav>
+
+  <div class="main-container">
+    <div class="sidebar" [ngClass]="{ collapsed: isSidebarCollapsed }">
+      <div class="sidebar-header">
+        <div class="logo-container">
+          <h2 *ngIf="!isSidebarCollapsed" class="sidebar-title">
+            Gestión de Tutorías
+          </h2>
+        </div>
+        <button
+          class="collapse-btn"
+          (click)="toggleSidebar()"
+          [attr.aria-label]="
+            isSidebarCollapsed ? 'Expandir sidebar' : 'Colapsar sidebar'
+          "
+        >
+          <i
+            class="fas"
+            [ngClass]="
+              isSidebarCollapsed ? 'fa-chevron-right' : 'fa-chevron-left'
+            "
+          ></i>
+        </button>
+      </div>
+
+      <nav class="menu" role="navigation">
+      </nav>
+    </div>
+
+    <div class="content">
+
+
+      <div class="logs-container" *ngIf="logs?.length">
+        <h4>Logs:</h4>
+        <div class="logs-scroll">
+          <p *ngFor="let log of logs">{{ log }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

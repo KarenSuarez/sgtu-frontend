@@ -83,7 +83,9 @@
         >
           <i class="fas fa-calendar-alt menu-icon"></i>
           <span class="menu-text" *ngIf="!isSidebarCollapsed">Horario</span>
-          <div class="active-indicator" *ngIf="currentView === 'horario'"></div>
+          <div class="active-indicator" 
+          *ngIf="currentView === 'horario'"
+          ></div>
         </button>
 
         <button
@@ -156,7 +158,8 @@
             <i class="fas fa-file-export"></i> Exportar Horario
           </button>
         </div>
-        <table class="schedule-table">
+    
+          <table class="schedule-table">
           <thead>
             <tr>
               <th>Hora</th>
@@ -181,7 +184,8 @@
               </td>
             </tr>
           </tbody>
-        </table>
+          </table>
+        
       </div>
 
       <div *ngIf="currentView === 'tutorias'">

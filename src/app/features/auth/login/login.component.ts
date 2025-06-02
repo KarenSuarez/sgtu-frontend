@@ -2,11 +2,13 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CustomAlertComponent } from '../../../shared/components/custom-alert/custom-alert.component';
+import { C } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, CustomAlertComponent],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -20,6 +22,10 @@ export class LoginComponent {
   };
   constructor(private router: Router) {}
 
+  alertVisible = false;
+  alertMessage = '';
+
+
   login(): void {
     const { usuario, password } = this;
 
@@ -28,7 +34,8 @@ export class LoginComponent {
     } else if (usuario === this.testCredentials.estudiante.usuario && password === this.testCredentials.estudiante.password) {
       this.router.navigate(['/student']);
     } else {
-      alert('Credenciales incorrectas.');
+      this.alertMessage = 'Credenciales incorrectas.';
+      this.alertVisible = true;
     }
   }
 }
