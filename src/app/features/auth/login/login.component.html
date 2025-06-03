@@ -23,21 +23,38 @@
 
     <form id="login-form" class="signup-form" (ngSubmit)="login()">
       <label for="input-usuario">Usuario</label>
-      <input
-        id="input-usuario"
-        type="text"
-        placeholder="@uptc.edu.co"
-        [(ngModel)]="usuario"
-        name="usuario"
-        required />
+      <div class="input-group">
+        <input
+          id="input-usuario"
+          type="text"
+          [(ngModel)]="userPartialEmail"
+          name="userPartialEmail"
+          (blur)="validateUser()" #userField="ngModel"
+          [class.is-invalid]="userError && (userField.dirty || userField.touched)"
+          required />
+        <span class="domain-suffix">{{ domain }}</span>
+      </div>
+      <div *ngIf="userError && (userField.dirty || userField.touched)" class="error-message">
+        {{ userError }}
+      </div>
 
       <label for="input-password">Contraseña</label>
-      <input
-        id="input-password"
-        type="password"
-        [(ngModel)]="password"
-        name="password"
-        required />
+      <div class="input-group">
+        <input
+          id="input-password"
+          [type]="isPasswordVisible ? 'text' : 'password'"
+          [(ngModel)]="password"
+          name="password"
+          (blur)="validatePassword()" #passwordField="ngModel"
+          [class.is-invalid]="passwordError && (passwordField.dirty || passwordField.touched)"
+          required />
+        <span class="password-toggle-icon" (click)="togglePasswordVisibility()">
+          <i class="fas" [ngClass]="isPasswordVisible ? 'fa-eye-slash' : 'fa-eye'"></i>
+        </span>
+      </div>
+      <div *ngIf="passwordError && (passwordField.dirty || passwordField.touched)" class="error-message">
+        {{ passwordError }}
+      </div>
 
       <div class="checkbox" id="remember-checkbox-container">
         <input type="checkbox" id="remember-me" />
@@ -48,7 +65,10 @@
 
       <p class="member-text" id="forgot-password">¿Olvidaste tu Contraseña?</p>
 
-      <button id="btn-login" class="signup-btn" type="submit">Iniciar Sesión</button>
+      <button id="btn-login" class="signup-btn" type="submit" [disabled]="isSubmitting">
+        <span *ngIf="!isSubmitting">Iniciar Sesión</span>
+        <span *ngIf="isSubmitting">Iniciando...</span>
+      </button>
     </form>
   </div>
 </div>

@@ -1,0 +1,132 @@
+.requests-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.requests-table th,
+.requests-table td {
+  border: 1px solid #eee;
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 1rem;
+}
+
+.requests-table th {
+  background: #f5ba00;
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.requests-table tr:nth-child(even) {
+  background: #fffbea;
+}
+
+.selected-row {
+  background: #ffe082 !important;
+}
+
+.icon-btn {
+  background: #fffbea;
+  border: 1.5px solid #f5ba00;
+  color: #f5ba00;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  margin-right: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.icon-btn:last-child {
+  margin-right: 0;
+}
+
+.icon-btn.btn-success {
+  border-color: #388e3c;
+  color: #388e3c;
+}
+.icon-btn.btn-success:hover {
+  background: #388e3c;
+  color: #fff;
+}
+
+.icon-btn.btn-danger {
+  border-color: #b71c1c;
+  color: #b71c1c;
+}
+.icon-btn.btn-danger:hover {
+  background: #b71c1c;
+  color: #fff;
+}
+
+.icon-btn.btn-info {
+  border-color: #1976d2;
+  color: #1976d2;
+}
+.icon-btn.btn-info:hover {
+  background: #1976d2;
+  color: #fff;
+}
+
+.icon-btn.btn-secondary {
+  border-color: #bdbdbd;
+  color: #757575;
+}
+.icon-btn.btn-secondary:hover {
+  background: #bdbdbd;
+  color: #fff;
+}
+
+.processing-actions {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0 8px 0;
+}
+
+.request-details-cell {
+  background: #fffde7;
+  padding: 0;
+  border-bottom: 2px solid #f5ba00;
+}
+
+.request-details-section {
+  padding: 18px 24px;
+  border-radius: 0 0 8px 8px;
+  background: #fffde7;
+  font-size: 1rem;
+}
+
+.rejection-reason-group {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.styled-textarea {
+  border: 1.5px solid #f5ba00;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 1rem;
+  background: #fff;
+  color: #1a1a1a;
+  resize: vertical;
+  min-height: 60px;
+  max-height: 180px;
+  transition: border 0.2s;
+}
+
+.styled-textarea:focus {
+  border-color: #ffd54f;
+  outline: none;
+}

@@ -1,1 +1,86 @@
-<p>list-tutoring works!</p>
+<div class="list-tutorings-container">
+  <h3>{{ listType === 'tutorings' ? 'Mis Tutorías Agendadas' : 'Mis Solicitudes de Tutoría' }}</h3>
+
+  <app-custom-alert *ngIf="alertVisible" [message]="alertMessage" [type]="alertType"></app-custom-alert>
+
+  <div class="filters-section">
+    <label for="statusFilter">Filtrar por Estado:</label>
+    <select id="statusFilter" name="statusFilter" [(ngModel)]="selectedStatus" (change)="loadData()">
+      <option [value]="null">Todos los Estados</option>
+      <option *ngFor="let status of currentStatuses" [value]="status">{{ status | titlecase }}</option>
+    </select>
+  </div>
+
+  <div *ngIf="displayData.length === 0; else dataTable" class="no-data-message">
+    <p>No hay {{ listType === 'tutorings' ? 'tutorías agendadas' : 'solicitudes de tutoría' }} para mostrar.</p>
+  </div>
+
+  <ng-template #dataTable>
+    <table class="tutorings-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Estudiante</th>
+          <th>Docente</th>
+          <th>Asignatura</th>
+          <th>{{ listType === 'tutorings' ? 'Fecha Inicio' : 'Fecha Deseada' }}</th>
+          <th>Hora</th>
+          <th>Estado</th>
+          <th *ngIf="listType === 'tutorings'">Observaciones</th>
+          <th *ngIf="listType === 'requests'">Mensaje/Razón Rechazo</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of displayData">
+          <td>{{ item.id }}</td>
+          <td>{{ item.student?.user?.name || 'N/A' }}</td>
+          <td>{{ item.teacher?.user?.name || 'N/A' }}</td>
+          <td>{{ item.subject?.name || 'N/A' }}</td>
+          <td *ngIf="isTutoring(item)">{{ item.startDate | date:'mediumDate' }}</td>
+          <td *ngIf="isTutoringRequest(item)">{{ item.desiredDate | date:'mediumDate' }}</td>
+          <td *ngIf="isTutoring(item)">{{ item.startDate | date:'shortTime' }} - {{ item.endDate | date:'shortTime' }}</td>
+          <td *ngIf="isTutoringRequest(item)">{{ item.startTime | slice:0:5 }} - {{ item.endTime | slice:0:5 }}</td>
+          <td><span [class]="'status-' + item.status.toLowerCase()">{{ item.status | titlecase }}</span></td>
+          <td *ngIf="isTutoring(item)">{{ item.observations || 'N/A' }}</td>
+          <td *ngIf="isTutoringRequest(item)">{{ item.message || item.rejectionReason || 'N/A' }}</td>
+          <td>
+            <ng-container *ngIf="isTutoring(item)">
+              <button
+                class="icon-btn btn-success"
+                (click)="markTutoringSession(item.id, TutoringStatus.COMPLETED)"
+                [disabled]="!canPerformTutoringAction(item)"
+                *ngIf="forRole === 'teacher'" title="Completar">
+                <i class="fas fa-check"></i>
+              </button>
+              <button
+                class="icon-btn btn-warning"
+                (click)="markTutoringSession(item.id, TutoringStatus.NO_SHOW)"
+                [disabled]="!canPerformTutoringAction(item)"
+                *ngIf="forRole === 'teacher'" title="No Asistió">
+                <i class="fas fa-user-slash"></i>
+              </button>
+              <button
+                class="icon-btn btn-danger"
+                (click)="cancelTutoring(item.id)"
+                [disabled]="!canPerformTutoringAction(item)" title="Cancelar">
+                <i class="fas fa-times"></i>
+              </button>
+            </ng-container>
+
+            <ng-container *ngIf="isTutoringRequest(item)">
+              <button
+                class="icon-btn btn-danger"
+                (click)="processRequest(item.id, 'CANCELLED')"
+                [disabled]="item.status !== RequestStatus.PENDING"
+                *ngIf="forRole === 'student'" title="Cancelar Solicitud">
+                <i class="fas fa-times"></i>
+              </button>
+
+              </ng-container>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-template>
+</div>

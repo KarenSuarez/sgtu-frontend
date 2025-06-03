@@ -1,0 +1,126 @@
+<div class="availability-schedule-container">
+  <div class="header-row">
+    <h3>Horario Semanal</h3>
+    <div class="header-actions">
+      <button class="btn-add-schedule" (click)="openAddAvailabilityModal()">
+        <i class="fas fa-plus"></i> Agregar Horario de Tutoría
+      </button>
+    </div>
+  </div>
+
+  <app-custom-alert *ngIf="alertVisible" [message]="alertMessage" [type]="alertType"></app-custom-alert>
+
+  <div class="schedule-display-section">
+    <div *ngIf="availabilitySchedules.length === 0 && classSchedules.length === 0; else scheduleCalendar" class="no-data-message">
+      <p>No tienes horarios de clases ni de disponibilidad registrados.</p>
+    </div>
+
+    <ng-template #scheduleCalendar>
+      <table class="schedule-calendar-table">
+        <thead>
+          <tr>
+            <th>Hora</th>
+            <th *ngFor="let dayInfo of currentWeekDays">
+              {{ dayInfo.name | titlecase }}<br>
+              <small>{{ dayInfo.date | date:'shortDate' }}</small>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let hour of hours">
+            <td>{{ hour | slice:0:5 }}</td>
+            <td *ngFor="let dayInfo of currentWeekDays" [ngClass]="getSlotType(hour, dayInfo.name, dayInfo.date).type">
+              <ng-container *ngIf="getSlotType(hour, dayInfo.name, dayInfo.date) as slot">
+                <div [ngSwitch]="slot.type" class="slot-content">
+                  <ng-container *ngSwitchCase="'class'">
+                    <span class="slot-class-name">
+                      {{ slot.classData?.subject?.code || 'Clase' }} - {{ slot.classData?.classroom || 'N/A' }}
+                    </span>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'available'">
+                    <span class="slot-availability">
+                      Disponible
+                      <button class="slot-icon-btn" title="Editar" (click)="openEditAvailabilityModal(slot.availableData!)">
+                        <i class="fas fa-pen"></i>
+                      </button>
+                      <button class="slot-icon-btn" title="Eliminar" (click)="deleteAvailability(slot.availableData!.id)">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </span>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'occupied'">
+                    <span class="slot-occupied">
+                      Ocupado
+                      <button class="slot-icon-btn" title="Editar" (click)="openEditAvailabilityModal(slot.availableData!)">
+                        <i class="fas fa-pen"></i>
+                      </button>
+                      <button class="slot-icon-btn" title="Eliminar" (click)="deleteAvailability(slot.availableData!.id)">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </span>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'empty'">
+                    <span class="slot-empty"></span>
+                  </ng-container>
+                </div>
+              </ng-container>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-template>
+  </div>
+
+  <app-modal [show]="showFormModal" (closeModal)="closeFormModal()">
+    <div class="modal-header">
+      <h4>{{ isEditing ? 'Editar Horario de Disponibilidad' : 'Añadir Nuevo Horario de Disponibilidad' }}</h4>
+      <button class="close-modal-btn" (click)="closeFormModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form (ngSubmit)="addOrUpdateAvailability()" #availabilityForm="ngForm" class="availability-form-modal">
+        <div class="form-group">
+          <label for="dayOfWeek">Día de la Semana:</label>
+          <select id="dayOfWeek" name="dayOfWeek" [(ngModel)]="newAvailability.dayOfWeek" (change)="onDayOfWeekChange()"
+            [disabled]="newAvailability.specificDate !== undefined && newAvailability.specificDate !== null && newAvailability.specificDate !== ''">
+            <option [value]="undefined">Seleccione un día</option>
+            <option *ngFor="let day of daysOfWeek" [value]="day">{{ day | titlecase }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="specificDate">Fecha Específica:</label>
+          <input type="date" id="specificDate" name="specificDate" [(ngModel)]="newAvailability.specificDate" (change)="onSpecificDateChange()"
+            [disabled]="newAvailability.dayOfWeek !== undefined && newAvailability.dayOfWeek !== null">
+        </div>
+
+        <div class="form-group time-selection">
+          <label for="startTime">Hora de Inicio:</label>
+          <select id="startTime" name="startTime" [(ngModel)]="newAvailability.startTime" required>
+            <option [value]="undefined" disabled>Seleccione hora</option>
+            <option *ngFor="let hour of hours" [value]="hour">{{ hour.substring(0, 5) }}</option>
+          </select>
+        </div>
+
+        <div class="form-group time-selection">
+          <label for="endTime">Hora de Fin:</label>
+          <select id="endTime" name="endTime" [(ngModel)]="newAvailability.endTime" required>
+            <option [value]="undefined" disabled>Seleccione hora</option>
+            <option *ngFor="let hour of hours" [value]="hour">{{ hour.substring(0, 5) }}</option>
+          </select>
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label for="available">Disponible:</label>
+          <input type="checkbox" id="available" name="available" [(ngModel)]="newAvailability.available">
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-primary" [disabled]="!availabilityForm.valid || (!newAvailability.dayOfWeek && !newAvailability.specificDate)">
+            {{ isEditing ? 'Guardar Cambios' : 'Añadir Horario' }}
+          </button>
+          <button type="button" class="btn-secondary" (click)="closeFormModal()">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </app-modal>
+</div>

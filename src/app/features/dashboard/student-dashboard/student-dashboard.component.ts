@@ -1,52 +1,104 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+// src/app/features/dashboard/student-dashboard/student-dashboard.component.ts
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule, DatePipe } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 
+// Importar servicios y modelos
+import { AuthService } from '../../../core/services/auth.service';
+import { SubjectService } from '../../subjects/services/subject.service';
+import { TutoringService } from '../../tutoring/services/tutoring.service';
+import { ScheduleService } from '../../../core/services/schedule.service';
+import { User, StudentProfile } from '../../../core/models/user.interface';
+import { Subject, ClassSchedule } from '../../../core/models/subject.interface';
+import { TutoringRequest, Tutoring, TutoringStatus, RequestStatus } from '../../../core/models/tutoring.interface';
+import { Observable, Subscription, forkJoin } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+// Importar los componentes que cargarás dinámicamente
+import { RequestTutoringComponent } from '../../tutoring/request-tutoring/request-tutoring.component';
+import { StudentClassScheduleComponent } from '../../schedules/student-class-schedule/student-class-schedule.component';
+import { ListSubjectComponent } from '../../subjects/list-subjects/list-subjects.component'; // Asegúrate de la ruta correcta
+import { ListTutoringComponent } from '../../tutoring/list-tutoring/list-tutoring.component'; // ¡NUEVO!
 
 @Component({
   selector: 'app-estudiante',
   templateUrl: './student-dashboard.component.html',
   styleUrls: ['./student-dashboard.component.css'],
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [CommonModule, FormsModule, RouterModule, DatePipe, RequestTutoringComponent, StudentClassScheduleComponent, ListSubjectComponent, ListTutoringComponent], // Añadir ListTutoringComponent
 })
-export class StudentDashboardComponent implements OnInit {
-  hours = ['7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17'];
-  days: string[] = [];
-  schedule: {
-    [hour: string]: { [day: string]: { class: string; professor: string } };
-  } = {};
-  subjects: { name: string; professor: string }[] = []; // Removed 'students'
-  selectedSubject = '';
-  tutorias: {
-    hour: string;
-    day: string;
-    subject: string | null;
-    status: string;
-  }[] = [];
-  program: string = '';
-  programs: string[] = [];
-  userName: string = 'Estudiante Name';
-  currentView: string = 'inicio';
-  selectedHour = '';
-  selectedDay = '';
-  requestingTutoria: {
-    hour: string;
-    day: string;
-    subject: string | null;
-  } | null = null;
+export class StudentDashboardComponent implements OnInit, OnDestroy {
+  currentUser: User | null = null;
+  studentProfileId: number | null = null;
+  userName: string = 'Estudiante';
+
+  // Resumen del dashboard (datos del backend)
+  upcomingTutorings: Tutoring[] = [];
+  pendingTutoringRequests: TutoringRequest[] = [];
+  subjectsEnrolled: Subject[] = [];
+
   isSidebarCollapsed = false;
   isUserMenuOpen = false;
 
+  currentView: 'inicio' | 'asignaturas' | 'horario' | 'tutorias-solicitud' | 'tutorias-mis-solicitudes' | 'tutorias-historial' = 'inicio';
 
-  constructor(private router: Router) {}
+  private userSubscription: Subscription | undefined;
+  private dataSubscription: Subscription | undefined;
 
-  ngOnInit() {
-    this.generateWeekDays();
-    this.fetchSubjects();
-    this.fetchSchedule();
-    this.loadTutorias();
+  constructor(
+    public router: Router,
+    private authService: AuthService,
+    private subjectService: SubjectService,
+    private tutoringService: TutoringService,
+    private scheduleService: ScheduleService
+  ) {}
+
+  ngOnInit(): void {
+    this.userSubscription = this.authService.currentUser$.subscribe(user => {
+      this.currentUser = user;
+      if (user) {
+        this.userName = user.name || 'Estudiante';
+        if (user.role?.name === 'student' && user.student) {
+            this.studentProfileId = user.student.id;
+            this.loadDashboardData(this.studentProfileId); // Cargar datos del dashboard si es estudiante
+        } else {
+            console.warn('Usuario logueado no es estudiante o perfil de estudiante incompleto para StudentDashboard. Redirigiendo a login...');
+            this.router.navigate(['/auth/login']);
+        }
+      } else {
+        this.router.navigate(['/auth/login']);
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.userSubscription?.unsubscribe();
+    this.dataSubscription?.unsubscribe();
+  }
+
+  private loadDashboardData(studentId: number): void {
+    this.dataSubscription = forkJoin([
+      this.tutoringService.getTutorings({ studentId: studentId, status: TutoringStatus.SCHEDULED }),
+      this.tutoringService.getTutoringRequests({ studentId: studentId, status: RequestStatus.PENDING }),
+      this.subjectService.getSubjectsForUser(this.currentUser!.id)
+    ]).subscribe({
+      next: ([upcomingTutorings, pendingRequests, subjectsEnrolled]) => {
+        const now = new Date();
+        this.upcomingTutorings = upcomingTutorings.data
+          ? upcomingTutorings.data
+              .filter(t => new Date(t.startDate) > now)
+              .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
+              .slice(0, 5)
+          : [];
+
+        this.pendingTutoringRequests = pendingRequests.data || [];
+        this.subjectsEnrolled = subjectsEnrolled.data || [];
+      },
+      error: (err) => {
+        console.error('Error al cargar datos del dashboard del estudiante:', err);
+      }
+    });
   }
 
   toggleSidebar() {
@@ -58,132 +110,10 @@ export class StudentDashboardComponent implements OnInit {
   }
 
   logout() {
-    // Implement logout logic here
-    console.log('Cerrar Sesión');
-    this.router.navigate(['/login']);
+    this.authService.logout();
   }
 
-  generateWeekDays() {
-    const today = new Date();
-    const dayOfWeek = today.getDay();
-    const startOfWeek = new Date(today);
-    startOfWeek.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
-
-    this.days = [];
-    for (let i = 0; i < 6; i++) {
-      const currentDay = new Date(startOfWeek);
-      currentDay.setDate(startOfWeek.getDate() + i);
-      const dayName = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'][i];
-      const dayFormatted = `${dayName} <span class="math-inline">\{
-currentDay\.getDate\(\)
-\}/</span>{currentDay.getMonth() + 1}`;
-      this.days.push(dayFormatted);
-    }
-  }
-
-  fetchSubjects() {
-    // Placeholder for fetching student's subjects from a service/API
-    this.subjects = [
-      { name: 'Cálculo I', professor: 'Dr. Matemáticas' },
-      { name: 'Programación Básica', professor: 'Ing. Sistemas' },
-      { name: 'Física General', professor: 'Lic. Física' },
-    ];
-  }
-
-  fetchSchedule() {
-    // Placeholder for fetching student's schedule from a service/API
-    this.schedule = {
-      '7': { 'Lun 26/5': { class: 'Cálculo I', professor: 'Dr. Matemáticas' } },
-      '9': { 'Lun 26/5': { class: 'Programación Básica', professor: 'Ing. Sistemas' } },
-      '11': { 'Mar 27/5': { class: 'Física General', professor: 'Lic. Física' } },
-      // ... more schedule data
-    };
-  }
-
-  loadTutorias() {
-    // Placeholder for loading student's requested tutorias from a service/API
-    this.tutorias = [
-      { hour: '14', day: 'Mié 28/5', subject: 'Cálculo I', status: 'Pendiente' },
-      { hour: '10', day: 'Vie 30/5', subject: 'Programación Básica', status: 'Aprobada' },
-    ];
-  }
-
-  navigateTo(path: string) {
-    this.currentView = path;
-    this.requestingTutoria = null; // Reset requestingTutoria when navigating
-  }
-
-  isOccupied(hour: string, day: string) {
-    return this.schedule[hour]?.[day]?.class;
-  }
-
-  requestTutoria(subjectName: string) {
-    this.selectedSubject = subjectName;
-    this.requestingTutoria = {
-      subject: subjectName,
-      day: '',
-      hour: '',
-    };
-    this.navigateTo('tutorias');
-  }
-
-  addTutoriaRequest() {
-    if (this.selectedHour && this.selectedDay && this.selectedSubject) {
-      this.requestingTutoria = {
-        subject: this.selectedSubject,
-        day: this.selectedDay,
-        hour: this.selectedHour,
-      };
-    }
-  }
-
-  confirmTutoriaRequest() {
-    if (this.requestingTutoria) {
-      this.tutorias.push({
-        hour: this.requestingTutoria.hour,
-        day: this.requestingTutoria.day,
-        subject: this.requestingTutoria.subject,
-        status: 'Pendiente', // Default status for a new request
-      });
-      // Optionally, send this request to a service/API
-      this.selectedHour = '';
-      this.selectedDay = '';
-      this.selectedSubject = '';
-      this.requestingTutoria = null;
-    }
-  }
-
-  cancelTutoria(tutoria: {
-    hour: string;
-    day: string;
-    subject: string | null;
-    status: string;
-  }) {
-    const index = this.tutorias.findIndex(
-      (t) =>
-        t.hour === tutoria.hour &&
-        t.day === tutoria.day &&
-        t.subject === tutoria.subject
-    );
-    if (index > -1) {
-      this.tutorias.splice(index, 1);
-      // Optionally
-// You might want to call a service here to update the backend
-    }
-  }
-
-  downloadSchedule() {
-    // Implement download logic
-    console.log('Descargar Horario');
-  }
-
-  saveSchedule() {
-    // Implement save logic
-    console.log('Guardar Horario');
-  }
-
-  exportSchedule() {
-    // Implement export logic
-    console.log('Exportar Horario');
+  navigateTo(view: typeof this.currentView): void {
+    this.currentView = view;
   }
 }

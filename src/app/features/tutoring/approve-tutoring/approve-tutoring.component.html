@@ -1,1 +1,70 @@
-<p>approve-tutoring works!</p>
+<div class="approve-tutoring-container">
+  <h3>Solicitudes de Tutoría Pendientes</h3>
+
+  <app-custom-alert *ngIf="alertVisible" [message]="alertMessage" [type]="alertType"></app-custom-alert>
+
+  <div class="requests-list-section">
+    <h4>Lista de Solicitudes</h4>
+    <div *ngIf="pendingRequests.length === 0; else requestsTable">
+      <p>No hay solicitudes de tutoría pendientes.</p>
+    </div>
+    <ng-template #requestsTable>
+      <table class="requests-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Estudiante</th>
+            <th>Asignatura</th>
+            <th>Fecha Deseada</th>
+            <th>Hora</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let request of pendingRequests">
+            <tr [class.selected-row]="selectedRequest?.id === request.id">
+              <td>{{ request.id }}</td>
+              <td>{{ request.student?.user?.name || 'N/A' }}</td>
+              <td>{{ request.subject?.name || 'N/A' }}</td>
+              <td>{{ request.desiredDate | date:'mediumDate' }}</td>
+              <td>{{ request.startTime | slice:0:5 }} - {{ request.endTime | slice:0:5 }}</td>
+              <td>{{ request.status }}</td>
+              <td>
+                <button class="icon-btn btn-info" title="Detalles" (click)="selectRequest(request)">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="selectedRequest?.id === request.id">
+              <td colspan="7" class="request-details-cell">
+                <div class="request-details-section">
+                  <p><strong>Mensaje:</strong> {{ selectedRequest?.message || 'No especificado.' }}</p>
+                  <p><strong>Estado Actual:</strong> {{ selectedRequest?.status }}</p>
+                  <div class="processing-actions">
+                    <button class="icon-btn btn-success" title="Aprobar" (click)="processRequest('APPROVED')">
+                      <i class="fas fa-check"></i>
+                    </button>
+                    <button class="icon-btn btn-danger" title="Rechazar" (click)="processRequest('REJECTED')">
+                      <i class="fas fa-times"></i>
+                    </button>
+                    <button class="icon-btn btn-secondary" title="Cerrar" (click)="selectedRequest = null">
+                      <i class="fas fa-times-circle"></i>
+                    </button>
+                  </div>
+                  <div *ngIf="selectedRequest?.status === 'REJECTED' || selectedRequest?.status === 'PENDING'" class="rejection-reason-group">
+                    <label for="rejectionReason">Razón de Rechazo (si aplica):</label>
+                    <textarea id="rejectionReason" name="rejectionReason" [(ngModel)]="rejectionReason" rows="3" class="styled-textarea"></textarea>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </ng-template>
+  </div>
+</div>
+
+
+
