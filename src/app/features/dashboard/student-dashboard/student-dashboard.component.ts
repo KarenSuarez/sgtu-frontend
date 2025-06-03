@@ -1,10 +1,8 @@
-// src/app/features/dashboard/student-dashboard/student-dashboard.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
-// Importar servicios y modelos
 import { AuthService } from '../../../core/services/auth.service';
 import { SubjectService } from '../../subjects/services/subject.service';
 import { TutoringService } from '../../tutoring/services/tutoring.service';
@@ -15,7 +13,6 @@ import { TutoringRequest, Tutoring, TutoringStatus, RequestStatus } from '../../
 import { Observable, Subscription, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-// Importar los componentes que cargarás dinámicamente
 import { RequestTutoringComponent } from '../../tutoring/request-tutoring/request-tutoring.component';
 import { StudentClassScheduleComponent } from '../../schedules/student-class-schedule/student-class-schedule.component';
 import { ListSubjectComponent } from '../../subjects/list-subjects/list-subjects.component'; // Asegúrate de la ruta correcta
@@ -33,7 +30,6 @@ export class StudentDashboardComponent implements OnInit, OnDestroy {
   studentProfileId: number | null = null;
   userName: string = 'Estudiante';
 
-  // Resumen del dashboard (datos del backend)
   upcomingTutorings: Tutoring[] = [];
   pendingTutoringRequests: TutoringRequest[] = [];
   subjectsEnrolled: Subject[] = [];
@@ -61,7 +57,7 @@ export class StudentDashboardComponent implements OnInit, OnDestroy {
         this.userName = user.name || 'Estudiante';
         if (user.role?.name === 'student' && user.student) {
             this.studentProfileId = user.student.id;
-            this.loadDashboardData(this.studentProfileId); // Cargar datos del dashboard si es estudiante
+            this.loadDashboardData(this.studentProfileId); 
         } else {
             console.warn('Usuario logueado no es estudiante o perfil de estudiante incompleto para StudentDashboard. Redirigiendo a login...');
             this.router.navigate(['/auth/login']);

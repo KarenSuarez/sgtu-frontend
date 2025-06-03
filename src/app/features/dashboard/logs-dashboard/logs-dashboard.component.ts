@@ -1,8 +1,7 @@
-// src/app/features/dashboard/logs-dashboard/logs-dashboard.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { CommonModule, DatePipe } from '@angular/common'; // Añadir DatePipe
+import { CommonModule, DatePipe } from '@angular/common'; 
 import { LogService } from '../../../core/services/log.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { LogEntry, PaginatedLogsResponse } from '../../../core/models/report.interface';
@@ -11,8 +10,8 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-logs-dashboard',
   templateUrl: './logs-dashboard.component.html',
-  standalone: true, // Si es standalone
-  imports: [CommonModule, FormsModule, RouterModule, DatePipe], // Añadir DatePipe
+  standalone: true, 
+  imports: [CommonModule, FormsModule, RouterModule, DatePipe], 
   styleUrls: ['./logs-dashboard.component.css']
 })
 export class LogsDashboardComponent implements OnInit, OnDestroy {
@@ -36,7 +35,7 @@ export class LogsDashboardComponent implements OnInit, OnDestroy {
   private logsSubscription: Subscription | undefined;
 
   constructor(
-    public router: Router, // Hacer público para acceso en HTML
+    public router: Router, 
     private logService: LogService,
     public authService: AuthService
   ) {}
@@ -102,9 +101,8 @@ export class LogsDashboardComponent implements OnInit, OnDestroy {
   }
 
   getPagesArray(): number[] {
-    // Si tienes muchas páginas, podrías limitar el número de botones de paginación
     const pages: number[] = [];
-    const maxButtons = 5; // Mostrar un máximo de 5 botones de página
+    const maxButtons = 5; 
     let startPage = Math.max(1, this.currentPage - Math.floor(maxButtons / 2));
     let endPage = Math.min(this.totalPages, startPage + maxButtons - 1);
 
@@ -127,7 +125,7 @@ export class LogsDashboardComponent implements OnInit, OnDestroy {
     this.isUserMenuOpen = !this.isUserMenuOpen;
   }
 
-  navigateTo(view: string): void { // Aquí sigue siendo router.navigate
+  navigateTo(view: string): void { 
     this.router.navigate([view]);
   }
 }

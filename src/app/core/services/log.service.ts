@@ -1,4 +1,3 @@
-// src/app/core/services/log.service.ts
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService, ApiResponse } from './api.service';
@@ -13,11 +12,11 @@ export class LogService {
   constructor(private apiService: ApiService) { }
 
   /**
-   * Obtiene logs del sistema con filtros y paginación.
-   * @param filters Objeto con filtros (userId, userEmail, action, startDate, endDate).
-   * @param page Número de página.
-   * @param limit Límite de resultados por página.
-   * @returns Observable con la respuesta paginada de logs.
+   * .
+   * @param filters 
+   * @param page 
+   * @param limit 
+   * @returns 
    */
   getLogs(filters?: { userId?: number, userEmail?: string, action?: string, startDate?: string, endDate?: string }, page: number = 1, limit: number = 20): Observable<ApiResponse<PaginatedLogsResponse>> {
     let params = new HttpParams();
@@ -33,17 +32,17 @@ export class LogService {
   }
 
   /**
-   * Genera un informe de auditoría por rango de fechas (datos JSON).
-   * @param startDate Fecha de inicio (YYYY-MM-DD).
-   * @param endDate Fecha de fin (YYYY-MM-DD).
-   * @returns Observable con la lista de LogEntry.
+   * 
+   * @param startDate 
+   * @param endDate 
+   * @returns 
    */
   generateAuditReportData(startDate: string, endDate: string): Observable<ApiResponse<LogEntry[]>> {
     let params = new HttpParams();
     params = params.set('startDate', startDate);
     params = params.set('endDate', endDate);
-    params = params.set('format', 'JSON'); // Forzar formato JSON para datos
-    params = params.set('type', 'SYSTEM_AUDIT'); // Especificar tipo de reporte
+    params = params.set('format', 'JSON'); 
+    params = params.set('type', 'SYSTEM_AUDIT'); 
 
     return this.apiService.get<LogEntry[]>('reports', params);
   }

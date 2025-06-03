@@ -1,5 +1,4 @@
-// src/app/features/auth/login/login.component.ts
-import { Component, OnInit } from '@angular/core'; // Añadir OnInit
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -14,21 +13,17 @@ import { User } from '../../../core/models/user.interface';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit { // Implementar OnInit
-  // Modelo de datos del formulario
-  userPartialEmail = ''; // Solo la parte del usuario antes del dominio
+export class LoginComponent implements OnInit {
+  userPartialEmail = '';
   password = '';
-  domain = '@uptc.edu.co'; // Dominio fijo
+  domain = '@uptc.edu.co';
 
-  // Variables para validación y UI
   isPasswordVisible = false;
-  isSubmitting = false; // Para deshabilitar el botón durante el envío
+  isSubmitting = false;
 
-  // Mensajes de validación en línea
   userError: string | null = null;
   passwordError: string | null = null;
 
-  // Alerta general (para errores de credenciales, etc.)
   alertVisible = false;
   alertMessage = '';
 
@@ -46,12 +41,10 @@ export class LoginComponent implements OnInit { // Implementar OnInit
     // }
   }
 
-  // Toggle para ver/ocultar contraseña
   togglePasswordVisibility(): void {
     this.isPasswordVisible = !this.isPasswordVisible;
   }
 
-  // Validaciones en línea
   validateUser(): void {
     if (!this.userPartialEmail.trim()) {
       this.userError = 'El campo usuario es obligatorio.';
@@ -68,22 +61,18 @@ export class LoginComponent implements OnInit { // Implementar OnInit
     }
   }
 
-  // Lógica de inicio de sesión
   login(): void {
-    // Forzar validación al intentar enviar
     this.validateUser();
     this.validatePassword();
 
-    // Si hay errores, no proceder
     if (this.userError || this.passwordError) {
       this.showAlert('warning', 'Por favor, complete todos los campos obligatorios.');
       return;
     }
 
-    this.isSubmitting = true; // Deshabilitar botón
-    this.alertVisible = false; // Ocultar alerta anterior
+    this.isSubmitting = true;
+    this.alertVisible = false;
 
-    // Construir el email completo con el dominio
     const fullEmail = `${this.userPartialEmail.trim()}${this.domain}`;
     const credentials = { email: fullEmail, password: this.password };
 
@@ -100,7 +89,6 @@ export class LoginComponent implements OnInit { // Implementar OnInit
     });
   }
 
-  // Método auxiliar para redirigir según el rol
   private redirectToDashboard(user: User): void {
     const roleName = user.role?.name;
     if (roleName === 'teacher') {
@@ -110,15 +98,12 @@ export class LoginComponent implements OnInit { // Implementar OnInit
     } else if (roleName === 'admin') {
       this.router.navigate(['dashboard/admin']);
     } else {
-      this.router.navigate(['/']); // Ruta por defecto
+      this.router.navigate(['/']);
     }
   }
 
-  // Mostrar alerta general
   showAlert(type: 'success' | 'error' | 'warning' | 'info', message: string): void {
     this.alertMessage = message;
     this.alertVisible = true;
-    // La alerta se cerrará automáticamente por su componente custom-alert o por un temporizador si lo implementas.
-    // setTimeout(() => this.alertVisible = false, 5000); // Esto ya lo controla CustomAlertComponent
   }
 }

@@ -1,6 +1,5 @@
-// src/app/features/dashboard/teacher-dashboard/teacher-dashboard.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common'; // Añadir DatePipe para el HTML
+import { CommonModule, DatePipe } from '@angular/common'; 
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
@@ -16,9 +15,8 @@ import { Observable, Subscription, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 
-// Importar los componentes que cargarás dinámicamente
 import { ApproveTutoringComponent } from '../../tutoring/approve-tutoring/approve-tutoring.component';
-import { ListTutoringComponent } from '../../tutoring/list-tutoring/list-tutoring.component'; // <-- ¡IMPORTAR ESTE COMPONENTE!
+import { ListTutoringComponent } from '../../tutoring/list-tutoring/list-tutoring.component'; 
  // Para el docente
 // Importar otros componentes que vayas a cargar aquí (ListSubjectComponent, etc.)
 // import { ListSubjectComponent } from '../../asignaturas/list-subject/list-subject.component';
@@ -31,28 +29,23 @@ import { ListTutoringComponent } from '../../tutoring/list-tutoring/list-tutorin
   imports: [CommonModule, FormsModule, RouterModule, DatePipe, ApproveTutoringComponent, ListSubjectComponent, TeacherAvailabilityScheduleComponent, ListTutoringComponent], // Añadir DatePipe y ApproveTutoringComponent
 })
 export class TeacherDashboardComponent implements OnInit, OnDestroy {
-  // Datos del usuario
   user: User | null = null;
-  // teacherProfile: Teacher | null = null;
   userName: string = 'Docente';
 
-  // Resumen del dashboard (datos del backend)
   pendingTutoringRequestsCount: number = 0;
   upcomingTutorings: Tutoring[] = [];
   subjectsTaught: Subject[] = [];
 
-  // Propiedades de UI/Layout
   isSidebarCollapsed = false;
   isUserMenuOpen = false;
 
-  // Control de vista interna
   currentView: 'inicio' | 'asignaturas' | 'horario' | 'tutorias-solicitudes' | 'tutorias-agendadas' | 'logs' = 'inicio'; // Define los tipos de vista
 
   private userSubscription: Subscription | undefined;
   private dataSubscription: Subscription | undefined;
 
   constructor(
-    public router: Router, // Mantenerlo público si lo usas en el HTML para otras cosas (ej. router.url)
+    public router: Router, 
     private authService: AuthService,
     private subjectService: SubjectService,
     private tutoringService: TutoringService,
@@ -64,9 +57,7 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
       this.user = user;
       if (user) {
         this.userName = user.name || 'Docente';
-        // Verificar que el usuario tenga el rol de 'teacher' Y que el objeto 'professor' anidado exista
         if (user.role?.name === 'teacher' && user.professor) {
-            // El ID del profesor para las llamadas a la API es el ID del user principal
             this.loadDashboardData(user.id);
         } else {
             console.warn('Usuario logueado no es profesor o perfil de profesor incompleto para TeacherDashboard. Redirigiendo a login...');
@@ -84,7 +75,6 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
   }
 
    private loadDashboardData(teacherId: number): void {
-    // Usa el ID del perfil de profesor, no el ID del usuario
     const professorId = this.user?.professor?.id;
     if (!professorId) {
       this.pendingTutoringRequestsCount = 0;
@@ -128,7 +118,6 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
     this.authService.logout();
   }
 
-  // Modificado: Ahora 'navigateTo' cambia la vista interna
   navigateTo(view: typeof this.currentView): void {
     this.currentView = view;
   }

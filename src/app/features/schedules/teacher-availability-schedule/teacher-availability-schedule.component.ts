@@ -1,4 +1,3 @@
-// src/app/features/schedules/teacher-availability-schedule/teacher-availability-schedule.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -32,7 +31,6 @@ export class TeacherAvailabilityScheduleComponent implements OnInit, OnDestroy {
     const hour = 7 + i;
     return `${hour.toString().padStart(2, '0')}:00:00`;
   });
-  // Asegúrate de que el orden de 'days' coincida con el orden de DaysOfWeek para tu lógica
   days: DayOfWeek[] = [DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY];
 
   dayOfWeekToIndex: { [key in DayOfWeek]: number } = {
@@ -44,7 +42,7 @@ export class TeacherAvailabilityScheduleComponent implements OnInit, OnDestroy {
     [DayOfWeek.FRIDAY]: 5,
     [DayOfWeek.SATURDAY]: 6,
   };
-  currentWeekDays: { name: DayOfWeek, date: string }[] = []; // Esto se usará en el HTML para el encabezado
+  currentWeekDays: { name: DayOfWeek, date: string }[] = []; 
 
   availabilitySchedules: AvailableSchedule[] = [];
   classSchedules: ClassSchedule[] = [];
@@ -61,7 +59,7 @@ export class TeacherAvailabilityScheduleComponent implements OnInit, OnDestroy {
   isEditing: boolean = false;
   editingScheduleId: number | null = null;
 
-  daysOfWeek: DayOfWeek[] = Object.values(DayOfWeek); // Para el select del formulario
+  daysOfWeek: DayOfWeek[] = Object.values(DayOfWeek); 
 
   alertVisible = false;
   alertMessage = '';
@@ -76,7 +74,7 @@ export class TeacherAvailabilityScheduleComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.generateCurrentWeekDays(); // Generar los días de la semana actual
+    this.generateCurrentWeekDays(); 
     this.userSubscription = this.authService.currentUser$.subscribe(user => {
       this.currentUser = user;
       if (user) {
@@ -91,7 +89,6 @@ export class TeacherAvailabilityScheduleComponent implements OnInit, OnDestroy {
             this.classSchedules = [];
         }
       } else {
-        // this.router.navigate(['/auth/login']); // Redirigir si no hay usuario
       }
     });
   }
@@ -103,21 +100,19 @@ export class TeacherAvailabilityScheduleComponent implements OnInit, OnDestroy {
 
   generateCurrentWeekDays(): void {
     const today = new Date();
-    const currentDayOfWeek = today.getDay(); // 0 (Domingo) a 6 (Sábado)
-
+    const currentDayOfWeek = today.getDay();
     const diffToMonday = currentDayOfWeek === 0 ? 6 : currentDayOfWeek - 1;
     const monday = new Date(today);
     monday.setDate(today.getDate() - diffToMonday);
 
     this.currentWeekDays = [];
-    // Recorrer los días que queremos mostrar en el calendario (Lunes a Sábado)
-    for (let i = 0; i < this.days.length; i++) { // this.days contiene MONDAY a SATURDAY
+    for (let i = 0; i < this.days.length; i++) { 
       const currentDay = new Date(monday);
       currentDay.setDate(monday.getDate() + i);
 
       this.currentWeekDays.push({
-        name: this.days[i], // El enum DayOfWeek (MONDAY, TUESDAY...)
-        date: currentDay.toISOString().split('T')[0] // Formato YYYY-MM-DD
+        name: this.days[i], 
+        date: currentDay.toISOString().split('T')[0] 
       });
     }
   }
@@ -160,16 +155,15 @@ export class TeacherAvailabilityScheduleComponent implements OnInit, OnDestroy {
 
   /**
    * Determina el tipo de slot para el calendario, incluyendo fechas específicas.
-   * @param hour Hora actual del slot (HH:MM).
-   * @param dayEnum Día de la semana (DayOfWeek, ej. MONDAY).
-   * @param dateStringToday Fecha ISO YYYY-MM-DD del día actual de la iteración de la semana.
-   * @returns Un objeto con el tipo de slot y los datos asociados.
+   * @param hour 
+   * @param dayEnum 
+   * @param dateStringToday 
+   * @returns 
    */
-  getSlotType(hour: string, dayEnum: DayOfWeek, dateStringToday: string): SlotInfo { // AHORA RECIBE LA FECHA DEL DÍA
+  getSlotType(hour: string, dayEnum: DayOfWeek, dateStringToday: string): SlotInfo { 
     const [h, m] = hour.split(':').map(Number);
     const slotStartMinutes = h * 60 + m;
 
-    // 1. Check Class Schedules (no cambia)
     const matchingClass = this.classSchedules.find(schedule => {
       const classStartMinutes = this.timeToMinutes(schedule.startTime);
       const classEndMinutes = this.timeToMinutes(schedule.endTime);
@@ -180,17 +174,14 @@ export class TeacherAvailabilityScheduleComponent implements OnInit, OnDestroy {
       return { type: 'class', classData: matchingClass };
     }
 
-    // 2. Check Availability Schedules (incluyendo recurrentes y por fecha específica)
     const matchingAvailability = this.availabilitySchedules.find(schedule => {
       const availStartMinutes = this.timeToMinutes(schedule.startTime);
       const availEndMinutes = this.timeToMinutes(schedule.endTime);
 
       const isTimeMatch = slotStartMinutes >= availStartMinutes && slotStartMinutes < availEndMinutes;
 
-      // Opción A: Disponibilidad recurrente por día de la semana
       const isRecurringDayMatch = schedule.dayOfWeek === dayEnum && schedule.specificDate === null;
 
-      // Opción B: Disponibilidad por fecha específica que coincide con el día del slot actual
       const isSpecificDateMatch = schedule.specificDate === dateStringToday && schedule.dayOfWeek === null;
 
       return (isRecurringDayMatch || isSpecificDateMatch) && isTimeMatch;
@@ -212,7 +203,6 @@ export class TeacherAvailabilityScheduleComponent implements OnInit, OnDestroy {
     this.editingScheduleId = schedule.id;
     this.newAvailability = {
       ...schedule,
-      // Convertir null a undefined para el formulario si viene null (para habilitar el otro campo)
       dayOfWeek: schedule.dayOfWeek !== null ? schedule.dayOfWeek : undefined,
       specificDate: schedule.specificDate ? new Date(schedule.specificDate).toISOString().split('T')[0] : undefined,
     };
@@ -225,7 +215,6 @@ export class TeacherAvailabilityScheduleComponent implements OnInit, OnDestroy {
   }
 
   addOrUpdateAvailability(): void {
-    // Validaciones básicas del formulario (HTML también las tiene)
     if (!this.newAvailability.startTime || !this.newAvailability.endTime || (!this.newAvailability.dayOfWeek && !this.newAvailability.specificDate)) {
       this.showAlert('warning', 'Por favor, complete al menos la hora de inicio, fin y un día/fecha.');
       return;
@@ -259,7 +248,7 @@ export class TeacherAvailabilityScheduleComponent implements OnInit, OnDestroy {
           if (response.success) {
             this.showAlert('success', 'Horario de disponibilidad actualizado exitosamente.');
             this.closeFormModal();
-            this.loadAllScheduleData(); // Recargar datos
+            this.loadAllScheduleData(); 
           } else {
             this.showAlert('error', response.message || 'Error al actualizar horario.');
           }
@@ -275,7 +264,7 @@ export class TeacherAvailabilityScheduleComponent implements OnInit, OnDestroy {
           if (response.success) {
             this.showAlert('success', 'Horario de disponibilidad añadido exitosamente.');
             this.closeFormModal();
-            this.loadAllScheduleData(); // Recargar datos
+            this.loadAllScheduleData(); 
           } else {
             this.showAlert('error', response.message || 'Error al añadir horario.');
           }
@@ -294,7 +283,7 @@ export class TeacherAvailabilityScheduleComponent implements OnInit, OnDestroy {
         next: (response) => {
           if (response.success) {
             this.showAlert('success', response.message || 'Horario de disponibilidad eliminado exitosamente.');
-            this.loadAllScheduleData(); // Recargar datos
+            this.loadAllScheduleData(); 
           } else {
             this.showAlert('error', response.message || 'Error al eliminar horario.');
           }
@@ -325,9 +314,6 @@ export class TeacherAvailabilityScheduleComponent implements OnInit, OnDestroy {
     if (this.newAvailability.dayOfWeek) {
       this.newAvailability.specificDate = undefined;
     } else {
-      // No limpiar specificDate si el usuario lo borró intencionalmente.
-      // Solo si deselecciona dayOfWeek y specificDate tiene un valor, se mantiene.
-      // this.newAvailability.specificDate = undefined;
     }
   }
 
@@ -335,8 +321,6 @@ export class TeacherAvailabilityScheduleComponent implements OnInit, OnDestroy {
     if (this.newAvailability.specificDate) {
       this.newAvailability.dayOfWeek = undefined;
     } else {
-      // No limpiar dayOfWeek si el usuario lo borró intencionalmente.
-      // this.newAvailability.dayOfWeek = undefined;
     }
   }
 

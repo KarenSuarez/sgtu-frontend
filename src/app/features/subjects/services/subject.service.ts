@@ -1,4 +1,3 @@
-// src/app/features/asignaturas/services/subject.service.ts
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService, ApiResponse } from '../../../core/services/api.service';
@@ -18,16 +17,15 @@ export class SubjectService {
 
   /**
    * Crea una nueva asignatura.
-   * @param subjectData Datos de la asignatura.
-   * @returns Observable con la nueva asignatura.
+   * @param subjectData 
+   * @returns 
    */
   createSubject(subjectData: CreateSubjectRequest): Observable<ApiResponse<Subject>> {
     return this.apiService.post<Subject>('subjects', subjectData);
   }
 
   /**
-   * Obtiene todas las asignaturas.
-   * @returns Observable con la lista de asignaturas.
+   * @returns 
    */
   getAllSubjects(): Observable<ApiResponse<Subject[]>> {
     return this.apiService.get<Subject[]>('subjects');
@@ -35,8 +33,8 @@ export class SubjectService {
 
   /**
    * Obtiene una asignatura por su ID.
-   * @param id ID de la asignatura.
-   * @returns Observable con la asignatura.
+   * @param id 
+   * @returns 
    */
   getSubjectById(id: number): Observable<ApiResponse<Subject>> {
     return this.apiService.get<Subject>(`subjects/${id}`);
@@ -44,9 +42,9 @@ export class SubjectService {
 
   /**
    * Actualiza una asignatura.
-   * @param id ID de la asignatura a actualizar.
-   * @param updateData Datos a actualizar.
-   * @returns Observable con la asignatura actualizada.
+   * @param id 
+   * @param updateData 
+   * @returns 
    */
   updateSubject(id: number, updateData: UpdateSubjectRequest): Observable<ApiResponse<Subject>> {
     return this.apiService.put<Subject>(`subjects/${id}`, updateData);
@@ -54,8 +52,8 @@ export class SubjectService {
 
   /**
    * Elimina una asignatura.
-   * @param id ID de la asignatura a eliminar.
-   * @returns Observable con el mensaje de éxito.
+   * @param id 
+   * @returns 
    */
   deleteSubject(id: number): Observable<ApiResponse<any>> {
     return this.apiService.delete<any>(`subjects/${id}`);
@@ -63,8 +61,8 @@ export class SubjectService {
 
   /**
    * Asocia un usuario a una asignatura.
-   * @param associationData Datos de la asociación (userId, subjectId).
-   * @returns Observable con el mensaje de éxito.
+   * @param associationData 
+   * @returns 
    */
   addUserToSubject(associationData: UserSubjectAssociation): Observable<ApiResponse<any>> {
     return this.apiService.post<any>('subjects/associate-user', associationData);
@@ -72,8 +70,8 @@ export class SubjectService {
 
   /**
    * Desasocia un usuario de una asignatura.
-   * @param associationData Datos de la desasociación (userId, subjectId).
-   * @returns Observable con el mensaje de éxito.
+   * @param associationData 
+   * @returns 
    */
   removeUserFromSubject(associationData: UserSubjectAssociation): Observable<ApiResponse<any>> {
     return this.apiService.delete<any>('subjects/dissociate-user', { body: associationData }); // DELETE con body
@@ -81,8 +79,8 @@ export class SubjectService {
 
   /**
    * Obtiene las asignaturas asociadas a un usuario específico.
-   * @param userId ID del usuario.
-   * @returns Observable con la lista de asignaturas.
+   * @param userId 
+   * @returns 
    */
   getSubjectsForUser(userId: number): Observable<ApiResponse<Subject[]>> {
     return this.apiService.get<Subject[]>(`subjects/user/${userId}`);
@@ -90,8 +88,8 @@ export class SubjectService {
 
   /**
    * Obtiene los docentes que imparten una asignatura específica.
-   * @param subjectId ID de la asignatura.
-   * @returns Observable con la lista de usuarios (docentes).
+   * @param subjectId 
+   * @returns 
    */
   getTeachersBySubject(subjectId: number): Observable<ApiResponse<User[]>> {
     return this.apiService.get<User[]>(`subjects/${subjectId}/teachers`);

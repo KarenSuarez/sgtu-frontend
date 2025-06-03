@@ -1,4 +1,3 @@
-// src/app/core/services/storage.service.ts
 import { Injectable } from '@angular/core';
 
 const TOKEN_KEY = 'auth-token';
@@ -13,7 +12,7 @@ export class StorageService {
 
   clean(): void {
     window.sessionStorage.clear();
-    window.localStorage.clear(); // Opcional, si usas localStorage
+    window.localStorage.clear(); 
   }
 
   public saveToken(token: string): void {
@@ -25,12 +24,12 @@ export class StorageService {
     return window.sessionStorage.getItem(TOKEN_KEY);
   }
 
-  public saveUser(user: any): void { // Puedes usar la interfaz User si ya la tienes cargada
+  public saveUser(user: any): void { 
     window.sessionStorage.removeItem(USER_KEY);
     window.sessionStorage.setItem(USER_KEY, JSON.stringify(user));
   }
 
-  public getUser(): any { // Puedes devolver User | null
+  public getUser(): any {
     const user = window.sessionStorage.getItem(USER_KEY);
     if (user) {
       return JSON.parse(user);

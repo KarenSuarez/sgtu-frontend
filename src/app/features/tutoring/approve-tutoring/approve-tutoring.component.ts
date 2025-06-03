@@ -1,11 +1,10 @@
-// src/app/features/tutoring/approve-tutoring/approve-tutoring.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { TutoringService } from '../../../features/tutoring/services/tutoring.service';
 import {
-  User, TeacherProfile // Importar TeacherProfile
+  User, TeacherProfile 
 } from '../../../core/models/user.interface';
 import {
   TutoringRequest, RequestStatus, ProcessTutoringRequest
@@ -22,7 +21,7 @@ import { CustomAlertComponent } from '../../../shared/components/custom-alert/cu
 })
 export class ApproveTutoringComponent implements OnInit, OnDestroy {
   currentUser: User | null = null;
-  teacherProfileId: number | null = null; // ID del perfil de profesor (Professor.id)
+  teacherProfileId: number | null = null; 
   pendingRequests: TutoringRequest[] = [];
   selectedRequest: TutoringRequest | null = null;
   rejectionReason: string = '';
@@ -43,11 +42,9 @@ export class ApproveTutoringComponent implements OnInit, OnDestroy {
     this.userSubscription = this.authService.currentUser$.subscribe(user => {
       this.currentUser = user;
       if (user && user.role?.name === 'teacher' && user.professor) {
-        // Asigna el ID del perfil de profesor (Professor.id)
-        this.teacherProfileId = user.professor.id; // ¡Esto es clave para filtrar solicitudes!
-        this.loadPendingRequests(); // Cargar solicitudes una vez que tenemos el ID del profesor
+        this.teacherProfileId = user.professor.id; 
+        this.loadPendingRequests(); 
       } else {
-        // Redirigir o mostrar mensaje si no es profesor
         console.warn('Acceso denegado. Solo docentes pueden aprobar tutorías.');
         this.showAlert('warning', 'Acceso denegado. Solo docentes pueden gestionar sus solicitudes.');
         this.pendingRequests = [];
@@ -68,14 +65,14 @@ export class ApproveTutoringComponent implements OnInit, OnDestroy {
     }
 
     this.requestsSubscription = this.tutoringService.getTutoringRequests({
-      teacherId: this.teacherProfileId, // Filtra por el ID del perfil de profesor
+      teacherId: this.teacherProfileId, 
       status: RequestStatus.PENDING
     }).subscribe({
       next: (response) => {
         if (response.success && response.data) {
           this.pendingRequests = response.data;
           this.showAlert('success', 'Solicitudes pendientes cargadas exitosamente.');
-          console.log("Solicitudes pendientes cargadas:", this.pendingRequests); // DEBUG
+          console.log("Solicitudes pendientes cargadas:", this.pendingRequests);
         } else {
           this.showAlert('error', response.message || 'Error al cargar solicitudes pendientes.');
           this.pendingRequests = [];
@@ -116,7 +113,7 @@ export class ApproveTutoringComponent implements OnInit, OnDestroy {
         if (response.success && response.data) {
           this.showAlert('success', `Solicitud ${status.toLowerCase()} exitosamente.`);
           this.selectedRequest = null;
-          this.loadPendingRequests(); // Recargar la lista después de procesar
+          this.loadPendingRequests(); 
         } else {
           this.showAlert('error', response.message || `Error al ${status.toLowerCase()} la solicitud.`);
         }

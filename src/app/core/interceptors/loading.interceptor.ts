@@ -1,17 +1,16 @@
-// src/app/core/interceptors/loading.interceptor.ts
 import { HttpInterceptorFn } from '@angular/common/http';
 import { finalize } from 'rxjs/operators';
 import { inject } from '@angular/core';
-import { LoadingService } from '../services/loading.service'; // Importa el nuevo LoadingService
+import { LoadingService } from '../services/loading.service'; 
 
 export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
   const loadingService = inject(LoadingService);
 
-  loadingService.show(); // Muestra el spinner al inicio de la solicitud
+  loadingService.show(); 
 
   return next(req).pipe(
     finalize(() => {
-      loadingService.hide(); // Oculta el spinner cuando la solicitud finaliza (éxito o error)
+      loadingService.hide(); 
     })
   );
 };
