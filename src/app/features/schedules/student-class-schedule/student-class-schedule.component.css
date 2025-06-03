@@ -1,0 +1,143 @@
+/* src/app/features/schedules/student-class-schedule/student-class-schedule.component.css */
+
+/* Contenedor principal */
+.schedule-container {
+  background: #fffbea;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  padding: 32px 24px;
+  max-width: 900px; /* Ancho similar al de disponibilidad */
+  margin: 32px auto;
+}
+
+.schedule-container h3 {
+  color: #212120;
+  margin-bottom: 24px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+/* Sección de display del horario */
+.schedule-display-section {
+  margin-top: 20px;
+}
+
+.schedule-display-section h4 {
+  color: #1a1a1a;
+  margin-bottom: 18px;
+  font-weight: 600;
+}
+
+/* Estilos para la tabla de calendario (reutilizado de teacher-availability) */
+.schedule-calendar-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.schedule-calendar-table th,
+.schedule-calendar-table td {
+  border: 1px solid #eee;
+  padding: 3px 2px; /* Más delgado */
+  text-align: center;
+  font-size: 0.85rem;
+  vertical-align: middle;
+  position: relative;
+  height: 32px;
+  min-width: 80px;
+  max-width: 120px;
+  overflow: hidden;
+}
+
+.schedule-calendar-table th {
+  background: #f5ba00;
+  color: #1a1a1a;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.schedule-calendar-table tr:nth-child(even) {
+  background: #fffbea;
+}
+
+/* Estilos de los slots */
+.slot-content {
+  min-height: 18px;
+  font-size: 0.85rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.slot-class {
+  background-color: #e0f2f7; /* Azul claro para clases */
+  color: #00796b; /* Texto oscuro para contraste */
+  font-weight: bold;
+}
+
+.slot-class-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #00796b;
+}
+
+.slot-empty {
+  background-color: #fcfcfc;
+}
+
+/* Mensajes de "No hay datos" */
+.no-data-message {
+  color: #bdbdbd;
+  text-align: center;
+  margin: 18px 0;
+}
+
+/* Media queries para responsividad (reutilizado) */
+@media (max-width: 768px) {
+  .schedule-container {
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 95vw;
+  }
+  .schedule-calendar-table th,
+  .schedule-calendar-table td {
+    font-size: 0.8rem;
+    padding: 5px 2px;
+  }
+  .slot-class-name {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .schedule-container {
+    max-width: 99vw;
+    padding: 8px 2px;
+  }
+  .schedule-calendar-table th,
+  .schedule-calendar-table td {
+    font-size: 0.75rem;
+    min-width: 60px;
+    max-width: 80px;
+    padding: 2px 1px;
+  }
+}
+
+@media (max-width: 600px) {
+  .schedule-container {
+    padding: 4px 0;
+  }
+  .schedule-calendar-table th,
+  .schedule-calendar-table td {
+    font-size: 0.7rem;
+    min-width: 40px;
+    max-width: 60px;
+    padding: 1px 0;
+  }
+}

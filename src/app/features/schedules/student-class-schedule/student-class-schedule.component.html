@@ -1,0 +1,43 @@
+<div class="schedule-container">
+  <h3>Horario de Clases</h3>
+
+  <app-custom-alert *ngIf="alertVisible" [message]="alertMessage" [type]="alertType"></app-custom-alert>
+
+  <div *ngIf="classSchedules.length === 0; else scheduleCalendar" class="no-data-message">
+    <p>No hay horarios de clases registrados para ti.</p>
+    <p>Si crees que esto es un error, contacta con tu administrador académico.</p>
+  </div>
+
+  <ng-template #scheduleCalendar>
+    <table class="schedule-calendar-table">
+      <thead>
+        <tr>
+          <th>Hora</th>
+          <th *ngFor="let day of days">{{ day | titlecase }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let hour of hours">
+          <td>{{ hour | slice:0:5 }}</td>
+          <td *ngFor="let day of days" [ngClass]="getSlotType(hour, day).type">
+            <ng-container *ngIf="getSlotType(hour, day) as slot">
+              <div [ngSwitch]="slot.type" class="slot-content">
+                <ng-container *ngSwitchCase="'class'">
+                  <span class="slot-class-name">
+                    {{ slot.classData?.subject?.code || 'Clase' }} - {{ slot.classData?.classroom || 'N/A' }}
+                  </span>
+                  <small>
+                    {{ slot.classData?.startTime | slice:0:5 }} - {{ slot.classData?.endTime | slice:0:5 }}
+                  </small>
+                </ng-container>
+                <ng-container *ngSwitchCase="'empty'">
+                  <span class="slot-empty"></span>
+                </ng-container>
+              </div>
+            </ng-container>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-template>
+</div>

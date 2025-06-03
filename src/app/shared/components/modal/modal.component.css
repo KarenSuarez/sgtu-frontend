@@ -1,0 +1,88 @@
+/* src/app/shared/components/modal/modal.component.css */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semitransparente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Asegura que esté por encima de todo */
+}
+
+.modal-content {
+  background-color: #fffbea; /* Fondo del modal */
+  padding: 25px 35px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  max-width: 550px; /* Ancho máximo del modal */
+  width: 90%; /* Ancho responsivo */
+  position: relative;
+  overflow: hidden; /* Oculta cualquier cosa que se salga del modal */
+  max-height: 90vh; /* Altura máxima para no desbordar */
+  overflow-y: auto; /* Scroll si el contenido es grande */
+}
+
+/* Estilos para el header del modal (si lo incluyes en el ng-content) */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.modal-header h4 {
+  margin: 0;
+  color: #f5ba00;
+  font-size: 1.6rem;
+}
+
+.close-modal-btn {
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  font-weight: bold;
+  cursor: pointer;
+  color: #888;
+  transition: color 0.2s;
+}
+
+.close-modal-btn:hover {
+  color: #333;
+}
+
+/* Estilos específicos para el formulario dentro del modal si es necesario,
+   o reutiliza los de teacher-availability-schedule.component.css */
+.availability-form-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.availability-form-modal .form-group label {
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 5px;
+}
+
+.availability-form-modal .form-group select,
+.availability-form-modal .form-group input[type="date"],
+.availability-form-modal .form-group input[type="checkbox"] {
+  padding: 10px 12px;
+  border: 1.5px solid #f5ba00;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: #fff;
+  color: #1a1a1a;
+}
+
+.availability-form-modal .form-actions {
+  display: flex;
+  justify-content: flex-end; /* Alinea los botones a la derecha */
+  gap: 10px;
+  margin-top: 20px;
+}

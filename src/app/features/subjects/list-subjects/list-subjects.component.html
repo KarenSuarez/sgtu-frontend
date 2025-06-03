@@ -1,1 +1,51 @@
-<p>list-subjects works!</p>
+<div class="list-subjects-container">
+  <div class="list-subjects-header">
+    <h3>Listado de Asignaturas</h3>
+    <button *ngIf="isAdmin" class="btn-primary" (click)="createSubject()">
+      <i class="fas fa-plus"></i> Crear Asignatura
+    </button>
+  </div>
+
+  <app-custom-alert *ngIf="alertVisible" [message]="alertMessage" [type]="alertType"></app-custom-alert>
+
+  <div *ngIf="subjects.length === 0; else subjectsTable" class="no-data-message">
+    <p>No hay asignaturas registradas.</p>
+    <p *ngIf="!isAdmin">Contacta a tu administrador para más información.</p>
+  </div>
+
+  <ng-template #subjectsTable>
+    <table class="subjects-table">
+      <thead>
+        <tr>
+          <th>Código</th>
+          <th>Nombre</th>
+          <th>Créditos</th>
+          <th>Área</th>
+          <th>Estado</th>
+          <th *ngIf="isAdmin">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let subject of subjects">
+          <td>{{ subject.code }}</td>
+          <td>{{ subject.name }}</td>
+          <td>{{ subject.credits }}</td>
+          <td>{{ subject.area || 'N/A' }}</td>
+          <td>
+            <span [class.status-active]="subject.status" [class.status-inactive]="!subject.status">
+              {{ subject.status ? 'Activa' : 'Inactiva' }}
+            </span>
+          </td>
+          <td *ngIf="isAdmin">
+            <button class="btn-primary" (click)="editSubject(subject.id)">
+              <i class="fas fa-edit"></i> Editar
+            </button>
+            <button class="btn-secondary" (click)="deleteSubject(subject.id)">
+              <i class="fas fa-trash-alt"></i> Eliminar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-template>
+</div>

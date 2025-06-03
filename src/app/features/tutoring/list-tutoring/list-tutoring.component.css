@@ -1,0 +1,195 @@
+/* src/app/features/tutoring/list-tutoring/list-tutoring.component.css */
+
+.list-tutorings-container {
+  background: #fffbea;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  padding: 32px 24px;
+  max-width: 1200px; /* Más ancho */
+  margin: 32px auto;
+}
+
+.list-tutorings-container h3 {
+  color: #f5ba00;
+  margin-bottom: 24px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+.tutorings-table {
+  width: 100%;
+  min-width: 900px;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.tutorings-table th,
+.tutorings-table td {
+  border: 1px solid #eee;
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 1rem;
+}
+
+.tutorings-table th {
+  background: #f5ba00;
+  color: #1a1a1a;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.tutorings-table tr:nth-child(even) {
+  background: #fffbea;
+}
+
+.tutorings-table tbody tr:hover {
+  background-color: #ffe082;
+  cursor: pointer;
+}
+
+/* Filtro bonito */
+.filters-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  background-color: #fcfcfc;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.filters-section label {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.filters-section select {
+  padding: 8px 12px;
+  border: 1.5px solid #f5ba00;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: #fff;
+  color: #1a1a1a;
+  transition: border 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 2px rgba(245,186,0,0.07);
+}
+
+.filters-section select:focus {
+  border-color: #ffd54f;
+  outline: none;
+  box-shadow: 0 0 0 2px #ffe082;
+}
+
+/* Botones de acción redondos con iconos */
+.icon-btn {
+  background: #fffbea;
+  border: 1.5px solid #f5ba00;
+  color: #f5ba00;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  margin-right: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2em;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.icon-btn:last-child {
+  margin-right: 0;
+}
+
+.icon-btn.btn-success {
+  border-color: #4CAF50;
+  color: #4CAF50;
+}
+.icon-btn.btn-success:hover {
+  background: #4CAF50;
+  color: #fff;
+}
+
+.icon-btn.btn-warning {
+  border-color: #FFC107;
+  color: #FFC107;
+}
+.icon-btn.btn-warning:hover {
+  background: #FFC107;
+  color: #fff;
+}
+
+.icon-btn.btn-danger {
+  border-color: #f44336;
+  color: #f44336;
+}
+.icon-btn.btn-danger:hover {
+  background: #f44336;
+  color: #fff;
+}
+
+.icon-btn:disabled {
+  background-color: #e0e0e0;
+  color: #a0a0a0;
+  border-color: #e0e0e0;
+  cursor: not-allowed;
+}
+
+/* Estilos para el estado de la tutoría */
+.status-scheduled {
+  color: #2196F3; /* Azul */
+  font-weight: bold;
+}
+.status-in_progress {
+  color: #ff9800; /* Naranja */
+  font-weight: bold;
+}
+.status-completed {
+  color: #4CAF50; /* Verde */
+  font-weight: bold;
+}
+.status-cancelled {
+  color: #f44336; /* Rojo */
+  font-weight: bold;
+}
+.status-no_show {
+  color: #795548; /* Marrón */
+  font-weight: bold;
+}
+
+.no-data-message {
+  color: #bdbdbd;
+  text-align: center;
+  margin: 25px 0;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+  .list-tutorings-container {
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 95vw;
+  }
+  .tutorings-table th,
+  .tutorings-table td {
+    font-size: 0.8rem;
+    padding: 8px;
+  }
+  .btn-action {
+    padding: 6px 10px;
+    font-size: 0.75rem;
+  }
+}
+
+.tutorings-table th:last-child,
+.tutorings-table td:last-child {
+  min-width: 120px;
+  width: 140px;
+  text-align: center;
+}

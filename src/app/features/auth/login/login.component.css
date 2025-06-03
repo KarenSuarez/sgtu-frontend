@@ -1,13 +1,24 @@
+/* src/app/features/auth/login/login.component.css */
+
+/* Contenedor principal para la división de paneles */
+.container {
+  display: flex;
+  height: 100vh; /* Asegura que ocupe toda la altura de la vista */
+  width: 100%;
+  overflow: hidden; /* Evita desbordamiento si el contenido es demasiado grande */
+}
+
 /* Panel izquierdo */
 .left-panel {
   flex: 1;
   background: rgb(31, 31, 31);
   color: white;
   display: flex;
-  flex-direction:   column;
+  flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: flex-start; /* Alinea los elementos al inicio del eje principal */
   padding: 40px;
+  text-align: center; /* Asegura que el texto dentro esté centrado */
 }
 
 .left-panel .logo {
@@ -15,10 +26,25 @@
   margin-bottom: 20px;
 }
 
-.left-panel h2 {
+.logo-image {
+  width: 100%;
+  max-width: 400px; /* Tamaño máximo para el logo */
+  height: auto;
+  margin-top: 70px;
+  margin-bottom: 10px;
+}
+
+.left-panel h1#app-title {
+  font-size: 3em;
+  margin-bottom: 0;
+  font-weight: bold;
+}
+
+.left-panel h1#app-subtitle {
+  font-size: 1.5em;
   font-weight: 300;
-  text-align: center;
-  text-emphasis-color: black;
+  margin-top: 5px;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 /* Panel derecho */
@@ -26,65 +52,112 @@
   display: flex;
   flex: 1;
   background: #fffbea;
-  color: white;
+  color: black; /* Cambiado a negro para mejor contraste con fondo claro */
   flex-direction: column;
   justify-content: center;
   padding: 40px;
 }
 
 .form-toggle {
-  display: block;
-  justify-content: flex-end;
+  display: block; /* O flex, dependiendo del layout interno deseado */
   text-align: center;
-  color: black;
-  gap: 10px;
   margin-bottom: 30px;
 }
 
-.toggle-btn {
-  background-color: transparent;
-  border: none;
-  color: #ccc;
-  font-size: 16px;
-  cursor: pointer;
+.form-toggle h1 {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+  color: #333; /* Color más oscuro para el título */
 }
 
-.toggle-btn.active {
-  color: #49c7b3;
-  font-weight: bold;
+.form-toggle h2 {
+  font-size: 1.2em;
+  font-weight: 300;
+  color: #555; /* Color para el subtítulo */
 }
 
 .signup-form {
   display: flex;
   flex-direction: column;
-  color: black;
 }
 
 .signup-form label {
   margin: 10px 0 5px;
   font-size: 14px;
+  font-weight: bold; /* Hacer las etiquetas más visibles */
+  color: #333;
 }
 
-.signup-form input[type="text"],
-.signup-form input[type="password"],
-.signup-form input[type="email"] {
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  margin-bottom: 15px;
-  text-align: right;
+/* --- Nuevos estilos para input-group y dominio --- */
+.input-group {
+  position: relative;
+  margin-bottom: 15px; /* Espacio entre grupos de input y mensaje de error */
+  display: flex; /* Para alinear input y sufijo */
+  align-items: center;
   border: 1px solid gray;
   border-radius: 8px;
-  padding: 20px;
   background-color: #fff;
+  padding: 0; /* Eliminar padding del grupo para que el input lo controle */
 }
 
+.input-group input {
+  flex-grow: 1; /* El input tomará el espacio disponible */
+  padding: 10px 15px; /* Ajustar padding */
+  border: none;
+  border-radius: 8px; /* Aplicar a los bordes del input */
+  background-color: transparent; /* Fondo transparente para que el grupo lo controle */
+  outline: none; /* Remover outline al enfocar */
+  color: #333; /* Color del texto del input */
+  text-align: left; /* <-- ¡Texto del usuario desde la izquierda! */
+}
+
+.input-group .domain-suffix {
+  padding: 10px 15px;
+  color: #777; /* Color más claro para el dominio */
+  background-color: #f0f0f0; /* Fondo sutil para el dominio */
+  border-left: 1px solid #ccc;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+  font-size: 0.9em;
+  white-space: nowrap; /* Evita que el dominio se rompa en varias líneas */
+}
+
+/* Estilo para el input de contraseña */
+.input-group input[type="password"] {
+  text-align: left; /* Asegura que la contraseña también se alinee a la izquierda */
+}
+
+.password-toggle-icon {
+  position: absolute;
+  right: 10px; /* Posicionar a la derecha del input-group */
+  cursor: pointer;
+  color: #555;
+  font-size: 1.1em;
+  padding: 5px; /* Aumenta el área de clic */
+  z-index: 10; /* Asegura que esté por encima del input */
+}
+
+/* Mensajes de error */
+.error-message {
+  color: red;
+  font-size: 0.85em;
+  margin-top: -10px; /* Acercar al campo */
+  margin-bottom: 10px; /* Separar del siguiente elemento */
+  padding-left: 5px;
+}
+
+/* Estilo para input inválido */
+.signup-form input.is-invalid {
+  border-color: red;
+  box-shadow: 0 0 0 0.2rem rgba(255, 0, 0, 0.25);
+}
+
+/* --- Estilos existentes (ajustados si es necesario) --- */
 .checkbox {
   display: flex;
   align-items: center;
+  margin-top: 5px; /* Ajustar margen superior */
   margin-bottom: 20px;
-  display: flex;
-  align-items: center;
 }
 
 .checkbox input {
@@ -92,7 +165,7 @@
 }
 
 .checkbox label a {
-  color: #f5ba00;
+  color: #323232;
   text-decoration: none;
 }
 
@@ -108,20 +181,53 @@
   transition: 0.3s;
 }
 
-.signup-btn:hover {
+.signup-btn:hover:not([disabled]) { /* Añadir :not([disabled]) */
   background-color: #d7aa39;
+}
+
+.signup-btn[disabled] {
+  background-color: #cccccc; /* Estilo para botón deshabilitado */
+  cursor: not-allowed;
 }
 
 .member-text {
   font-size: 14px;
-  color: #bbb;
+  color: #888; /* Color ajustado para visibilidad */
+  text-align: center;
+  margin-top: 10px;
+  cursor: pointer; /* Indicar que es clickeable */
 }
 
-.logo-image {
-  width: 100%;
-  max-width: 500px;
-  height: auto;
-  margin-top: 70px;
-  margin-bottom: 10px;
+/* Estilos para el Custom Alert - Si no están ya en custom-alert.component.css */
+/*
+.custom-alert {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 15px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+  color: white;
+  z-index: 1000;
+  min-width: 300px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
 }
 
+.custom-alert.success { background-color: #4CAF50; }
+.custom-alert.error { background-color: #f44336; }
+.custom-alert.warning { background-color: #ff9800; }
+.custom-alert.info { background-color: #2196F3; }
+
+.custom-alert .close-btn {
+  float: right;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 1;
+  color: white;
+  text-shadow: 0 1px 0 #fff;
+  opacity: 0.9;
+  cursor: pointer;
+}
+*/

@@ -78,26 +78,41 @@
           (click)="navigateTo('horario')"
           [ngClass]="{ active: currentView === 'horario' }"
           class="menu-item"
-          [attr.aria-label]="'Ir a Horario'"
+          [attr.aria-label]="'Ir a Horario de Disponibilidad'"
           [title]="isSidebarCollapsed ? 'Horario' : ''"
         >
           <i class="fas fa-calendar-alt menu-icon"></i>
-          <span class="menu-text" *ngIf="!isSidebarCollapsed">Horario</span>
+          <span class="menu-text" *ngIf="!isSidebarCollapsed">Horario de Disponibilidad</span>
           <div class="active-indicator" *ngIf="currentView === 'horario'"></div>
         </button>
 
         <button
-          (click)="navigateTo('tutorias')"
-          [ngClass]="{ active: currentView === 'tutorias' }"
+          (click)="navigateTo('tutorias-solicitudes')"
+          [ngClass]="{ active: currentView === 'tutorias-solicitudes' }"
           class="menu-item"
-          [attr.aria-label]="'Ir a Tutorías'"
-          [title]="isSidebarCollapsed ? 'Tutorías' : ''"
+          [attr.aria-label]="'Ir a Solicitudes de Tutoría'"
+          [title]="isSidebarCollapsed ? 'Solicitudes' : ''"
         >
-          <i class="fas fa-users menu-icon"></i>
-          <span class="menu-text" *ngIf="!isSidebarCollapsed">Tutorías</span>
+          <i class="fas fa-inbox menu-icon"></i>
+          <span class="menu-text" *ngIf="!isSidebarCollapsed">Solicitudes de Tutoría</span>
           <div
             class="active-indicator"
-            *ngIf="currentView === 'tutorias'"
+            *ngIf="currentView === 'tutorias-solicitudes'"
+          ></div>
+        </button>
+
+        <button
+          (click)="navigateTo('tutorias-agendadas')" #Navega a la vista de tutorías agendadas
+          [ngClass]="{ active: currentView === 'tutorias-agendadas' }"
+          class="menu-item"
+          [attr.aria-label]="'Ir a Mis Tutorías'"
+          [title]="isSidebarCollapsed ? 'Mis Tutorías' : ''"
+        >
+          <i class="fas fa-clipboard-list menu-icon"></i>
+          <span class="menu-text" *ngIf="!isSidebarCollapsed">Mis Tutorías</span>
+          <div
+            class="active-indicator"
+            *ngIf="currentView === 'tutorias-agendadas'"
           ></div>
         </button>
       </nav>
@@ -105,169 +120,74 @@
       <div class="sidebar-footer" *ngIf="!isSidebarCollapsed">
         <div class="user-info">
           <i class="fas fa-user-circle"></i>
-          <span>Usuario</span>
+          <span>{{ userName }}</span>
         </div>
       </div>
     </div>
 
     <div class="content">
-      <div *ngIf="currentView === 'inicio'">
+      <div *ngIf="currentView === 'inicio'" class="dashboard-summary">
         <h3>Bienvenido, {{ userName }}!</h3>
-        <p>
-          Este es el panel de gestión de tutorías. Utiliza los botones del menú
-          para navegar.
-        </p>
+        <p>Este es tu panel de control de tutorías. Aquí puedes ver un resumen de tu actividad.</p>
+
+        <div class="summary-cards">
+          <div class="card">
+            <h4>Solicitudes Pendientes</h4>
+            <p class="card-value">{{ pendingTutoringRequestsCount }}</p>
+            <button class="btn-primary" (click)="navigateTo('tutorias-solicitudes')">
+              Gestionar Solicitudes
+            </button>
+          </div>
+
+          <div class="card">
+            <h4>Próximas Tutorías Agendadas</h4>
+            <div *ngIf="upcomingTutorings.length > 0; else noUpcomingTutorings">
+              <ul class="upcoming-tutorias-list">
+                <li *ngFor="let tut of upcomingTutorings">
+                  {{ tut.subject?.name || 'Asignatura General' }} con {{ tut.student?.user?.name || 'Estudiante' }}
+                  el {{ tut.startDate | date:'mediumDate' }} de {{ tut.startDate | date:'shortTime' }} a {{ tut.endDate | date:'shortTime' }}
+                </li>
+              </ul>
+              <button class="btn-secondary" (click)="navigateTo('tutorias-agendadas')">
+                Ver Todas
+              </button>
+            </div>
+            <ng-template #noUpcomingTutorings>
+              <p>No tienes tutorías próximas.</p>
+            </ng-template>
+          </div>
+
+          <div class="card">
+            <h4>Mis Asignaturas</h4>
+            <div *ngIf="subjectsTaught.length > 0; else noSubjectsTaught">
+              <ul class="subjects-taught-list">
+                <li *ngFor="let subj of subjectsTaught">
+                  {{ subj.name }} ({{ subj.code }})
+                </li>
+              </ul>
+              <button class="btn-secondary" (click)="navigateTo('asignaturas')">
+                Gestionar Asignaturas
+              </button>
+            </div>
+            <ng-template #noSubjectsTaught>
+              <p>No tienes asignaturas asignadas.</p>
+            </ng-template>
+          </div>
+        </div>
       </div>
+
+      <div *ngIf="currentView === 'tutorias-solicitudes'">
+        <app-approve-tutoring></app-approve-tutoring> </div>
 
       <div *ngIf="currentView === 'asignaturas'">
-        <h3>Mis Asignaturas</h3>
-        <table class="asignaturas-table">
-          <thead>
-            <tr>
-              <th>Asignatura</th>
-              <th>Número de Estudiantes</th>
-              <th>Acción</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let subject of subjects">
-              <td>{{ subject.name }}</td>
-              <td>{{ subject.students }}</td>
-              <td>
-                <button (click)="programTutoria(subject.name)">
-                  Programar Tutoria
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+       <app-list-subject></app-list-subject> </div>
 
       <div *ngIf="currentView === 'horario'">
-        <h3>Horario de Clases</h3>
-        <div class="schedule-controls">
-          <button class="btn-primary" (click)="downloadSchedule()">
-            <i class="fas fa-download"></i> Descargar
-          </button>
-          <button class="btn-secondary" (click)="saveSchedule()">
-            <i class="fas fa-save"></i> Guardar Horario
-          </button>
-          <button class="btn-secondary" (click)="exportSchedule()">
-            <i class="fas fa-file-export"></i> Exportar Horario
-          </button>
-        </div>
-        <table class="schedule-table">
-          <thead>
-            <tr>
-              <th>Hora</th>
-              <th *ngFor="let day of days">{{ day }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let hour of hours">
-              <td>{{ hour }}</td>
-              <td
-                *ngFor="let day of days"
-                [ngClass]="{ occupied: isOccupied(hour, day) }"
-              >
-                <span *ngIf="schedule[hour]?.[day]?.class">{{
-                  schedule[hour][day].class
-                }}</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+        <app-teacher-availability-schedule></app-teacher-availability-schedule> </div>
 
-      <div *ngIf="currentView === 'tutorias'">
-        <h3>Configurar Tutoría</h3>
-        <div class="tutoria-form">
-          <select [(ngModel)]="selectedSubject" name="subject">
-            <option value="">Seleccione una asignatura o general</option>
-            <option *ngFor="let subject of subjects" [value]="subject.name">
-              {{ subject.name }}
-            </option>
-          </select>
-          <select [(ngModel)]="selectedDay" name="day">
-            <option value="">Seleccione un día</option>
-            <option *ngFor="let day of days" [value]="day">{{ day }}</option>
-          </select>
-          <select [(ngModel)]="selectedHour" name="hour">
-            <option value="">Seleccione una hora</option>
-            <option *ngFor="let hour of hours" [value]="hour">
-              {{ hour }}
-            </option>
-          </select>
-          <button
-            class="btn-primary"
-            (click)="addTutoria()"
-            [disabled]="
-              !selectedDay ||
-              !selectedHour ||
-              (!selectedSubject && !availability[selectedHour][selectedDay])
-            "
-          >
-            <i class="fas fa-plus"></i> Agregar Tutoría
-          </button>
-        </div>
+      <div *ngIf="currentView === 'tutorias-agendadas'">
+        <app-list-tutoring></app-list-tutoring> </div>
 
-        <div *ngIf="editingTutoria" class="edit-form">
-          <h4>Editar Tutoría</h4>
-          <select [(ngModel)]="selectedSubject" name="edit-subject">
-            <option value="">General</option>
-            <option *ngFor="let subject of subjects" [value]="subject.name">
-              {{ subject.name }}
-            </option>
-          </select>
-          <select [(ngModel)]="selectedDay" name="edit-day">
-            <option value="">Seleccione un día</option>
-            <option *ngFor="let day of days" [value]="day">{{ day }}</option>
-          </select>
-          <select [(ngModel)]="selectedHour" name="edit-hour">
-            <option value="">Seleccione una hora</option>
-            <option *ngFor="let hour of hours" [value]="hour">
-              {{ hour }}
-            </option>
-          </select>
-          <button
-            class="btn-primary"
-            (click)="saveEditedTutoria()"
-            [disabled]="
-              !selectedDay ||
-              !selectedHour ||
-              (!selectedSubject && !availability[selectedHour][selectedDay])
-            "
-          >
-            <i class="fas fa-save"></i> Guardar
-          </button>
-          <button class="btn-secondary" (click)="editingTutoria = null">
-            <i class="fas fa-times"></i> Cancelar
-          </button>
-        </div>
-
-        <h3>Lista de Tutorías</h3>
-        <table class="tutorias-table">
-          <thead>
-            <tr>
-              <th>Hora</th>
-              <th>Día</th>
-              <th>Asignatura</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let tutoria of tutorias">
-              <td>{{ tutoria.hour }}</td>
-              <td>{{ tutoria.day }}</td>
-              <td>{{ tutoria.subject || "General" }}</td>
-              <td>
-                <button (click)="editTutoria(tutoria)">Editar</button>
-                <button (click)="deleteTutoria(tutoria)">Eliminar</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
     </div>
   </div>
 </div>

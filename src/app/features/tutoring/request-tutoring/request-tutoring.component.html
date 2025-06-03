@@ -1,1 +1,66 @@
-<p>request-tutoring works!</p>
+<div class="request-tutoring-container">
+  <h3>Solicitar Nueva Tutoría</h3>
+
+  <app-custom-alert *ngIf="alertVisible" [message]="alertMessage" [type]="alertType"></app-custom-alert>
+
+  <form (ngSubmit)="requestTutoring()" #tutoringRequestForm="ngForm" class="tutoring-request-form">
+    <div class="form-group">
+      <label for="subject">Asignatura:</label>
+      <select id="subject" name="subject" [(ngModel)]="selectedSubjectId" (change)="onSubjectChange()" required>
+        <option [value]="null" disabled>Seleccione una asignatura</option>
+        <option *ngFor="let subject of subjects" [value]="subject.id">{{ subject.name }} ({{ subject.code }})</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="teacher">Docente:</label>
+      <select id="teacher" name="teacher" [(ngModel)]="selectedTeacherId" (change)="onTeacherChange()" required [disabled]="!selectedSubjectId || filteredTeachers.length === 0">
+        <option [value]="null" disabled>Seleccione un docente</option>
+        <option *ngFor="let teacher of filteredTeachers" [value]="teacher.id">{{ teacher.name }}</option>
+      </select>
+      <div *ngIf="selectedSubjectId && filteredTeachers.length === 0" class="no-teachers-message">
+        No hay docentes asociados a esta asignatura.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="availableSchedule">Horario Disponible:</label>
+      <select id="availableSchedule" name="availableSchedule" [(ngModel)]="selectedAvailableSchedule" (change)="onAvailableScheduleChange()" required [disabled]="!selectedTeacherId || teacherAvailableSchedules.length === 0">
+        <option [value]="null" disabled>Seleccione un horario disponible</option>
+        <option *ngFor="let schedule of teacherAvailableSchedules" [ngValue]="schedule">
+          {{ schedule.specificDate ? (schedule.specificDate | date:'mediumDate') : (schedule.dayOfWeek | titlecase) }}
+          ({{ schedule.startTime | slice:0:5 }} - {{ schedule.endTime | slice:0:5 }})
+          ({{ schedule.available ? 'Disponible' : 'Ocupado' }}) </option>
+      </select>
+      <div *ngIf="selectedTeacherId && teacherAvailableSchedules.length === 0" class="no-availability-message">
+        El docente seleccionado no tiene horarios de disponibilidad próximos o registrados.
+      </div>
+    </div>
+
+    <div class="form-group time-selection">
+      <label for="startTime">Hora de Inicio:</label>
+      <select id="startTime" name="startTime" [(ngModel)]="selectedStartTime" (change)="validateTimeRange()" required [disabled]="!selectedAvailableSchedule">
+        <option [value]="null" disabled>Seleccione hora</option>
+        <option *ngFor="let hour of hours" [value]="hour">{{ hour.substring(0, 5) }}</option>
+      </select>
+    </div>
+
+    <div class="form-group time-selection">
+      <label for="endTime">Hora de Fin:</label>
+      <select id="endTime" name="endTime" [(ngModel)]="selectedEndTime" (change)="validateTimeRange()" required [disabled]="!selectedAvailableSchedule">
+        <option [value]="null" disabled>Seleccione hora</option>
+        <option *ngFor="let hour of hours" [value]="hour">{{ hour.substring(0, 5) }}</option>
+      </select>
+    </div>
+    <div *ngIf="timeRangeError" class="error-message time-error-message">
+      {{ timeRangeError }}
+    </div>
+
+    <div class="form-group">
+      <label for="message">Mensaje al Docente (opcional):</label>
+      <textarea id="message" name="message" [(ngModel)]="message" rows="4"></textarea>
+    </div>
+
+    <button type="submit" class="btn-primary" [disabled]="!tutoringRequestForm.valid || timeRangeError !== null">Enviar Solicitud</button>
+  </form>
+</div>

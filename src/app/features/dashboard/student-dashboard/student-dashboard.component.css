@@ -9,10 +9,19 @@
   background: #f5ba00;
   color: white;
   height: 45px;
+  min-height: 45px;
   padding: 10px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    height: 55px;
+    max-height: 55px;
+    padding: 8px 10px;
+  }
 }
 
 .navbar-left {

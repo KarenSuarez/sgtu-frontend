@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 export class CustomAlertComponent {
   @Input() message: string = '';
   @Input() show: boolean = false;
+  @Input() type: string = 'info';
   @Output() closed = new EventEmitter<void>();
 
   close() {

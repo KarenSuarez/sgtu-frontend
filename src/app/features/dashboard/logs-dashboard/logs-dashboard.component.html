@@ -1,15 +1,28 @@
 <div class="app-container" id="app-container">
-
   <nav class="navbar" id="navbar">
     <div class="navbar-left" id="navbar-left">
       <img id="navbar-logo" src="assets/icons/logoUPTC.svg" alt="UPTC Logo" class="logo-image" />
     </div>
     <div class="navbar-right" id="navbar-right">
+      <div class="user-menu" id="user-menu">
+        <div class="user-info" (click)="toggleUserMenu()" id="user-info">
+          <img
+            src="assets/images/usuario.png"
+            alt="User Icon"
+            class="user-icon"
+            id="user-icon"
+          />
+          <span id="user-name">{{ userName.split(" ")[0] }}</span>
+        </div>
+        <div *ngIf="isUserMenuOpen" class="dropdown-menu" id="dropdown-menu">
+          <button class="btn-secondary" (click)="authService.logout()" id="logout-button"> <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+          </button>
+        </div>
+      </div>
     </div>
   </nav>
 
   <div class="main-container" id="main-container">
-    
     <div class="sidebar" id="sidebar" [ngClass]="{ collapsed: isSidebarCollapsed }">
       <div class="sidebar-header" id="sidebar-header">
         <div class="logo-container" id="sidebar-logo-container">
@@ -36,17 +49,127 @@
       </div>
 
       <nav class="menu" id="sidebar-menu" role="navigation">
-      </nav>
-    </div>
+        <button
+          (click)="navigateTo('/dashboard/admin')"
+          routerLinkActive="active"
+          class="menu-item"
+          [attr.aria-label]="'Ir a Inicio Admin'"
+          [title]="isSidebarCollapsed ? 'Inicio' : ''"
+        >
+          <i class="fas fa-home menu-icon"></i>
+          <span class="menu-text" *ngIf="!isSidebarCollapsed">Inicio Admin</span>
+          <div class="active-indicator" *ngIf="router.url === '/dashboard/admin'"></div>
+        </button>
 
-    <div class="content" id="main-content">
-      <div class="logs-container" id="logs-container" *ngIf="logs?.length">
-        <h4 id="logs-title">Logs:</h4>
-        <div class="logs-scroll" id="logs-scroll">
-          <p *ngFor="let log of logs" class="log-item">{{ log }}</p>
+        <button
+          (click)="navigateTo('/users/list')" #Componente para gestionar usuarios
+          routerLinkActive="active"
+          class="menu-item"
+          [attr.aria-label]="'Ir a Gestión de Usuarios'"
+          [title]="isSidebarCollapsed ? 'Usuarios' : ''"
+        >
+          <i class="fas fa-users-cog menu-icon"></i>
+          <span class="menu-text" *ngIf="!isSidebarCollapsed">Gestión de Usuarios</span>
+          <div class="active-indicator" *ngIf="router.url.startsWith('/users')"></div>
+        </button>
+
+        <button
+          (click)="navigateTo('/asignaturas/manage')" #Componente para gestionar asignaturas como admin
+          routerLinkActive="active"
+          class="menu-item"
+          [attr.aria-label]="'Ir a Gestión de Asignaturas'"
+          [title]="isSidebarCollapsed ? 'Asignaturas' : ''"
+        >
+          <i class="fas fa-book-reader menu-icon"></i>
+          <span class="menu-text" *ngIf="!isSidebarCollapsed">Gestión de Asignaturas</span>
+          <div class="active-indicator" *ngIf="router.url.startsWith('/asignaturas/manage')"></div>
+        </button>
+
+        <button
+          (click)="navigateTo('/logs')"
+          routerLinkActive="active"
+          class="menu-item"
+          [attr.aria-label]="'Ir a Logs y Auditoría'"
+          [title]="isSidebarCollapsed ? 'Logs' : ''"
+        >
+          <i class="fas fa-file-invoice menu-icon"></i>
+          <span class="menu-text" *ngIf="!isSidebarCollapsed">Logs y Auditoría</span>
+          <div class="active-indicator" *ngIf="router.url.startsWith('/logs')"></div>
+        </button>
+
+        <button
+          (click)="navigateTo('/reports/generate')"
+          routerLinkActive="active"
+          class="menu-item"
+          [attr.aria-label]="'Ir a Generar Reportes'"
+          [title]="isSidebarCollapsed ? 'Reportes' : ''"
+        >
+          <i class="fas fa-chart-bar menu-icon"></i>
+          <span class="menu-text" *ngIf="!isSidebarCollapsed">Generar Reportes</span>
+          <div class="active-indicator" *ngIf="router.url.startsWith('/reports')"></div>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer" *ngIf="!isSidebarCollapsed">
+        <div class="user-info">
+          <i class="fas fa-user-circle"></i>
+          <span>{{ userName }}</span>
         </div>
       </div>
     </div>
 
+    <div class="content" id="main-content">
+      <div class="logs-container" id="logs-container">
+        <h3 id="logs-title">Logs del Sistema</h3>
+
+        <div class="filters-section">
+          <input type="text" [(ngModel)]="filterUserEmail" placeholder="Email de Usuario" />
+          <input type="number" [(ngModel)]="filterUserId" placeholder="ID de Usuario" />
+          <input type="text" [(ngModel)]="filterAction" placeholder="Tipo de Acción" />
+          <input type="date" [(ngModel)]="filterStartDate" placeholder="Fecha Inicio" />
+          <input type="date" [(ngModel)]="filterEndDate" placeholder="Fecha Fin" />
+          <button (click)="applyFilters()">Aplicar Filtros</button>
+        </div>
+
+        <div class="logs-scroll" id="logs-scroll" *ngIf="logs.length > 0; else noLogs">
+          <table class="logs-table">
+            <thead>
+              <tr>
+                <th>Fecha/Hora</th>
+                <th>Usuario</th>
+                <th>Acción</th>
+                <th>Detalles</th>
+                <th>IP</th>
+                <th>User Agent</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let log of logs">
+                <td>{{ log.timestamp | date:'medium' }}</td>
+                <td>{{ log.userEmail || log.userId || 'Sistema' }}</td>
+                <td>{{ log.action }}</td>
+                <td><pre>{{ log.details | json }}</pre></td>
+                <td>{{ log.ipAddress }}</td>
+                <td>{{ log.userAgent }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <ng-template #noLogs>
+          <p class="no-data-message">No hay logs para mostrar con los filtros aplicados.</p>
+        </ng-template>
+
+        <div class="pagination-controls" *ngIf="totalPages > 1">
+          <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">Anterior</button>
+          <span>Página {{ currentPage }} de {{ totalPages }}</span>
+          <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">Siguiente</button>
+          <select [(ngModel)]="itemsPerPage" (change)="applyFilters()">
+            <option [value]="10">10 por pág.</option>
+            <option [value]="20">20 por pág.</option>
+            <option [value]="50">50 por pág.</option>
+          </select>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
