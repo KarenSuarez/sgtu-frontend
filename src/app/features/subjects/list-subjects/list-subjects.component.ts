@@ -1,7 +1,6 @@
-// src/app/features/asignaturas/list-subject/list-subject.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SubjectService } from '../../../features/subjects/services/subject.service'; // Asegúrate de que la ruta sea correcta
+import { SubjectService } from '../../../features/subjects/services/subject.service'; 
 import { AuthService } from '../../../core/services/auth.service';
 import { Subject } from '../../../core/models/subject.interface';
 import { User } from '../../../core/models/user.interface';
@@ -15,8 +14,8 @@ import { CustomAlertComponent } from '../../../shared/components/custom-alert/cu
     CommonModule,
     CustomAlertComponent
   ],
-  templateUrl: './list-subjects.component.html', // Corregido de list-subjects.component.html
-  styleUrls: ['./list-subjects.component.css'] // Corregido de list-subjects.component.css
+  templateUrl: './list-subjects.component.html', 
+  styleUrls: ['./list-subjects.component.css'] 
 })
 export class ListSubjectComponent implements OnInit, OnDestroy {
   subjects: Subject[] = [];
@@ -39,7 +38,7 @@ export class ListSubjectComponent implements OnInit, OnDestroy {
     this.userSubscription = this.authService.currentUser$.subscribe(user => {
       this.currentUser = user;
       this.isAdmin = user?.role?.name === 'admin' || false;
-      this.loadSubjects(); // Cargar asignaturas después de tener el usuario
+      this.loadSubjects(); 
     });
   }
 
@@ -50,14 +49,12 @@ export class ListSubjectComponent implements OnInit, OnDestroy {
 
   loadSubjects(): void {
     if (!this.currentUser) {
-      // Si no hay usuario logueado, no se cargan asignaturas (o se redirige, etc.)
       this.subjects = [];
       this.showAlert('info', 'Debe iniciar sesión para ver las asignaturas.');
       return;
     }
 
     if (this.isAdmin) {
-      // Si es administrador, cargamos TODAS las asignaturas (o lo que un admin deba ver)
       this.subjectsSubscription = this.subjectService.getAllSubjects().subscribe({
         next: (response) => {
           if (response.success && response.data) {
@@ -75,8 +72,6 @@ export class ListSubjectComponent implements OnInit, OnDestroy {
         }
       });
     } else {
-      // Para estudiantes y docentes, cargamos solo las asignaturas asociadas a ellos
-      // El ID del usuario que necesitamos para la API es el ID del usuario principal (User.id)
       const userId = this.currentUser.id;
       this.subjectsSubscription = this.subjectService.getSubjectsForUser(userId).subscribe({
         next: (response) => {
@@ -97,7 +92,6 @@ export class ListSubjectComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Métodos para acciones de Admin (crear, editar, eliminar)
   createSubject(): void {
     this.showAlert('info', 'Funcionalidad de crear asignatura (admin) pendiente.');
     console.log('Navegar a crear asignatura');
@@ -114,7 +108,7 @@ export class ListSubjectComponent implements OnInit, OnDestroy {
         next: (response) => {
           if (response.success) {
             this.showAlert('success', response.message || 'Asignatura eliminada exitosamente.');
-            this.loadSubjects(); // Recargar la lista
+            this.loadSubjects();
           } else {
             this.showAlert('error', response.message || 'Error al eliminar asignatura.');
           }

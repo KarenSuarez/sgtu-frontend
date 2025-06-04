@@ -1,4 +1,3 @@
-// src/app/app.routes.ts (Simplificado para esta fase)
 import { Routes } from '@angular/router';
 import { LoginComponent } from './features/auth/login/login.component';
 import { TeacherDashboardComponent } from './features/dashboard/teacher-dashboard/teacher-dashboard.component';
@@ -18,7 +17,7 @@ export const routes: Routes = [
 
   { path: 'dashboard/teacher', component: TeacherDashboardComponent },
   { path: 'dashboard/student', component: StudentDashboardComponent },
-  { path: 'dashboard/admin', component: LogsDashboardComponent }, // Asumiendo logs es el admin dashboard
+  { path: 'dashboard/admin', component: LogsDashboardComponent }, 
 
   { path: '**', redirectTo: 'auth/login' },
 ];

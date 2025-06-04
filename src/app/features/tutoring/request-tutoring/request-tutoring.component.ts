@@ -1,13 +1,12 @@
-// src/app/features/tutoring/request-tutoring/request-tutoring.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common'; // Asegúrate de importar DatePipe
+import { CommonModule, DatePipe } from '@angular/common'; 
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { SubjectService } from '../../subjects/services/subject.service';
 import { UserService } from '../../../core/services/user.service';
 import { TutoringService } from '../../..//features/tutoring/services/tutoring.service';
-import { ScheduleService } from '../../../core/services/schedule.service'; // Asegúrate de la ruta correcta
+import { ScheduleService } from '../../../core/services/schedule.service'; 
 import { User, StudentProfile, TeacherProfile } from '../../../core/models/user.interface';
 import { Subject, AvailableSchedule, DayOfWeek } from '../../../core/models/subject.interface';
 import { CreateTutoringRequest } from '../../../core/models/tutoring.interface';
@@ -325,7 +324,7 @@ export class RequestTutoringComponent implements OnInit, OnDestroy {
       targetDate.setHours(0,0,0,0);
 
       if (dayIndex === currentDayIndex) {
-        const slotHourMinutes = this.timeToMinutes(this.selectedAvailableSchedule.startTime); // Usar hora del slot
+        const slotHourMinutes = this.timeToMinutes(this.selectedAvailableSchedule.startTime); 
         const nowHourMinutes = today.getHours() * 60 + today.getMinutes();
         if (slotHourMinutes <= nowHourMinutes) {
           targetDate.setDate(today.getDate() + 7);

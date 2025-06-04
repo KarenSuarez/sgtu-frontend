@@ -1,12 +1,10 @@
-/* src/app/features/schedules/student-class-schedule/student-class-schedule.component.css */
 
-/* Contenedor principal */
 .schedule-container {
   background: #fffbea;
   border-radius: 16px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.07);
   padding: 32px 24px;
-  max-width: 900px; /* Ancho similar al de disponibilidad */
+  max-width: 900px; 
   margin: 32px auto;
 }
 
@@ -18,7 +16,6 @@
   font-size: 1.5rem;
 }
 
-/* Sección de display del horario */
 .schedule-display-section {
   margin-top: 20px;
 }
@@ -29,7 +26,6 @@
   font-weight: 600;
 }
 
-/* Estilos para la tabla de calendario (reutilizado de teacher-availability) */
 .schedule-calendar-table {
   width: 100%;
   border-collapse: collapse;
@@ -42,7 +38,7 @@
 .schedule-calendar-table th,
 .schedule-calendar-table td {
   border: 1px solid #eee;
-  padding: 3px 2px; /* Más delgado */
+  padding: 3px 2px; 
   text-align: center;
   font-size: 0.85rem;
   vertical-align: middle;
@@ -64,7 +60,6 @@
   background: #fffbea;
 }
 
-/* Estilos de los slots */
 .slot-content {
   min-height: 18px;
   font-size: 0.85rem;
@@ -76,8 +71,8 @@
 }
 
 .slot-class {
-  background-color: #e0f2f7; /* Azul claro para clases */
-  color: #00796b; /* Texto oscuro para contraste */
+  background-color: #e0f2f7; 
+  color: #00796b; 
   font-weight: bold;
 }
 
@@ -91,14 +86,12 @@
   background-color: #fcfcfc;
 }
 
-/* Mensajes de "No hay datos" */
 .no-data-message {
   color: #bdbdbd;
   text-align: center;
   margin: 18px 0;
 }
 
-/* Media queries para responsividad (reutilizado) */
 @media (max-width: 768px) {
   .schedule-container {
     padding: 20px;

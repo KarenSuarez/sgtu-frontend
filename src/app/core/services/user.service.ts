@@ -1,4 +1,3 @@
-// src/app/core/services/user.service.ts
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService, ApiResponse } from './api.service';
@@ -14,9 +13,8 @@ export class UserService {
   constructor(private apiService: ApiService) { }
 
   /**
-   * Crea un nuevo usuario (estudiante o docente).
-   * @param userData Datos del usuario a crear.
-   * @returns Observable con el nuevo usuario.
+   * @param userData
+   * @returns 
    */
   createUser(userData: CreateUserRequest): Observable<ApiResponse<User>> {
     return this.apiService.post<User>('users', userData);
@@ -24,8 +22,8 @@ export class UserService {
 
   /**
    * Obtiene un usuario por su ID.
-   * @param id ID del usuario.
-   * @returns Observable con el usuario.
+   * @param id 
+   * @returns 
    */
   getUserById(id: number): Observable<ApiResponse<User>> {
     return this.apiService.get<User>(`users/${id}`);
@@ -33,19 +31,19 @@ export class UserService {
 
   /**
    * Actualiza un usuario.
-   * @param id ID del usuario a actualizar.
-   * @param updateData Datos a actualizar.
-   * @returns Observable con el usuario actualizado.
+   * @param id 
+   * @param updateData 
+   * @returns 
    */
   updateUser(id: number, updateData: Partial<CreateUserRequest>): Observable<ApiResponse<User>> {
     return this.apiService.put<User>(`users/${id}`, updateData);
   }
 
   /**
-   * Cambia el estado de un usuario (ACTIVE, INACTIVE, SUSPENDED).
-   * @param id ID del usuario.
-   * @param status Nuevo estado.
-   * @returns Observable con el usuario actualizado.
+   * Cambia el estado de un usuario 
+   * @param id 
+   * @param status
+   * @returns 
    */
   changeUserStatus(id: number, status: UserStatus): Observable<ApiResponse<User>> {
     const body: UpdateUserStatusRequest = { status };
@@ -54,15 +52,13 @@ export class UserService {
 
   /**
    * Obtiene todos los usuarios por su rol.
-   * @param role Rol de los usuarios a obtener.
-   * @returns Observable con la lista de usuarios.
+   * @param role 
+   * @returns 
    */
   getAllUsersByRole(role: string): Observable<ApiResponse<User[]>> {
-    let httpParams = new HttpParams(); // Crea una nueva instancia de HttpParams
-    httpParams = httpParams.set('role', role); // Añade el parámetro 'role'
+    let httpParams = new HttpParams(); 
+    httpParams = httpParams.set('role', role); 
 
-    // Pasa la instancia de HttpParams directamente como segundo argumento
     return this.apiService.get<User[]>(`users`, httpParams);
   }
-  // Puedes añadir otros métodos para obtener listas de usuarios, etc.
 }
